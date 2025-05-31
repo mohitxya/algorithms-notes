@@ -6,3 +6,4 @@ int main(void)
 }
 ```
 `
+![[Pasted image 20250531201619.png]]
