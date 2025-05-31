@@ -1,4 +1,8 @@
-### Binary Exponentiation:
+## Table of Contents
+- [Binary Exponentiation](#binary%20exponentiation)
+- 
+
+### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
 >For $a^{n}$:
 >if n is even: `a x a` to the power `n/2`. Continue this till we get 0 as the exponent.
@@ -36,3 +40,4 @@ Example: $2^{10}$
 5. ans=4.0*256=1024.0, nn=0
 
 **THE FINAL ANSWER:** 1024
+
