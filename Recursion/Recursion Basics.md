@@ -5,6 +5,4 @@ int main(void)
 	printf("Hello World\n");
 }
 ```
-`
-![](Pasted%20image%2020250531202116.png)
-![](attachments/Pasted%20image%2020250531202515.png)
+
