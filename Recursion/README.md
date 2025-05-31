@@ -1,6 +1,6 @@
 ## Table of Contents
 - [Binary Exponentiation](#binary%20exponentiation)
-- [Hello](#hello)
+- [Sort Stack (recursion)](#sort%20stack%20with%20recursion)
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
@@ -68,3 +68,5 @@ long long binpow(long long a, long long b) {
     return res;
 }
 ```
+
+### Sort Stack with Recursion
