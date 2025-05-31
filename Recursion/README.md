@@ -1,6 +1,6 @@
 ## Table of Contents
 - [Binary Exponentiation](#binary%20exponentiation)
-- 
+- [Hello](#hello)
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
@@ -41,3 +41,4 @@ Example: $2^{10}$
 
 **THE FINAL ANSWER:** 1024
 
+### Hello
