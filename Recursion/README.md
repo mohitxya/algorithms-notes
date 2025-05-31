@@ -1,6 +1,6 @@
 ## Table of Contents
 - [Binary Exponentiation](#binary%20exponentiation)
-- [Sort Stack (recursion)](#sort%20stack%20with%20recursion)
+- [Sort Stack (recursion)](#sort-stack-with-recursion)
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
