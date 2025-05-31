@@ -41,4 +41,30 @@ Example: $2^{10}$
 
 **THE FINAL ANSWER:** 1024
 
-### Hello
+More Optimal Version:
+```cpp
+long long fast_power(long long base, long long exp) {
+    long long result = 1;
+    while (exp > 0) {
+        if (exp % 2 == 1)
+            result = result * base;   // no % mod
+        base = base * base;           // no % mod
+        exp /= 2;
+    }
+    return result;
+}
+```
+
+Uses shifting (source; cp algorithms):
+```cpp
+long long binpow(long long a, long long b) {
+    long long res = 1;
+    while (b > 0) {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+```
