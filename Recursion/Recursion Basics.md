@@ -6,4 +6,4 @@ int main(void)
 }
 ```
 `
-![[Pasted image 20250531201619.png]]
+![](Pasted%20image%2020250531202116.png)
