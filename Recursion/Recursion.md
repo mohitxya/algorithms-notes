@@ -1,2 +1,38 @@
 ### Binary Exponentiation:
-- If we are calculating $2^{10}$
+- If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
+>For $a^{n}$:
+>if n is even: `a x a` to the power `n/2`. Continue this till we get 0 as the exponent.
+>If n is odd: `ans = ans x a` and `n-=1`.
+
+```cpp
+double myPow(double x, int n) {
+    	double ans=1.0;
+        long long nn=n;
+        if(n<0) nn=-nn;
+        while(nn)
+        {
+        	if(nn%2)
+        	{
+        		ans=ans*x;
+        		nn=nn-1;
+        	}
+        	else
+        	{
+        		x=x*x;
+        		nn=nn/2;
+        	}
+        }
+
+        if(n<0) ans=(double) 1.0/(double) ans;
+        return ans;
+
+    }
+```
+Example: $2^{10}$ 
+1. ans=1.0, nn=10, x=4, nn=5
+2. ans=4.0, nn=4
+3. ans=4.0, nn=2, x=16
+4. ans=4.0, nn=1, x= 256
+5. ans=4.0*256=1024.0, nn=0
+
+**THE FINAL ANSWER:** 1024
