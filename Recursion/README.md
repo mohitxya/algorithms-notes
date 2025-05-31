@@ -1,5 +1,5 @@
 ## Table of Contents
-- [Binary Exponentiation](#binary%20exponentiation)
+- [Binary Exponentiation](#binary-exponentiation)
 - [Sort Stack (recursion)](#sort-stack-with-recursion)
 
 ### Binary Exponentiation
