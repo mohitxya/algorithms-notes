@@ -156,3 +156,16 @@ void reverseStack(stack<int> &stack) {
 
 }
 ```
+
+**Dry run:**
+top->bottom: 1 2 3 4
+1. top=1, reverseStack[2,3,4]
+2. top=2, reverseStack[3,4]
+3. top=3, reverseStack[4]
+4. top=4, reverseStack[] now it returns. So we can proceed to the next step of insertAtBottom([],4)
+5. so, since it's empty: [4], in previous function call top value was 3. and variables are local to function calls.
+6. insertAtBottom([4],3)
+7. within this function: top=4, popped [], [4,3]
+8. now, insertAtBottom([4,3],2)
+9. top=4, [3], insertAtBottom([3],2), --> [4,3,2]
+10. so on finally we get: [4,3,2,1]
