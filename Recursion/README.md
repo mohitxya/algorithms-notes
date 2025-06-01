@@ -2,6 +2,7 @@
 - [Binary Exponentiation](#binary-exponentiation)
 - [Sort Stack (recursion)](#sort-stack-with-recursion)
 - [Reverse Stack](#reverse-a-stack)
+- [Binary Substrings](#generate-binary-substrings)
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
@@ -169,3 +170,30 @@ top->bottom: 1 2 3 4
 8. now, insertAtBottom([4,3],2)
 9. top=4, [3], insertAtBottom([3],2), --> [4,3,2]
 10. so on finally we get: [4,3,2,1]
+
+### Generate Binary Substrings
+```cpp
+#include <iostream>
+using namespace std;
+
+void generateBinary(string current, int n) {
+    // Base case
+    if (current.length() == n) {
+        cout << current << endl;
+        return;
+    }
+
+    // Recursive case
+    generateBinary(current + '0', n);
+    generateBinary(current + '1', n);
+}
+
+int main() {
+    int n = 3; // length of binary strings
+    generateBinary("", n);
+    return 0;
+}
+
+```
+- Generates: 00,01,10,11. 
+- We can add conditions as well. (If the problem requires no consecutive 0s to be together)
