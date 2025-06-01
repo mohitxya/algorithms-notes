@@ -1,6 +1,7 @@
 ## Table of Contents
 - [Binary Exponentiation](#binary-exponentiation)
 - [Sort Stack (recursion)](#sort-stack-with-recursion)
+- [Reverse Stack](#reverse-a-stack)
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
@@ -70,5 +71,88 @@ long long binpow(long long a, long long b) {
 ```
 
 ### Sort Stack with Recursion
-- sample content
-- sample content 2
+```cpp
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void sortedInsert(stack<int> &s, int x) {
+    if (s.empty() || x > s.top()) {
+        s.push(x);
+        return;
+    }
+    int temp = s.top();
+    s.pop();
+    sortedInsert(s, x);
+    s.push(temp);
+}
+
+void sort(stack<int> &s) {
+    if (!s.empty()) {
+        int x = s.top();
+        s.pop();
+        sort(s);
+        sortedInsert(s, x);
+    }
+}
+
+int main() {
+    stack<int> s;
+
+    s.push(11);
+    s.push(2);
+    s.push(32);
+    s.push(3);
+    s.push(41);
+
+    sort(s);
+
+    while (!s.empty()) {
+        cout << s.top() << " ";
+        s.pop();
+    }
+    cout << endl;
+
+    return 0;
+}
+```
+
+**Explanation:**
+- We use two functions here `sort()` & `sortedInsert()`.
+- `sort()`: Recursively removes the topmost element of the stack and inserts it in it's correct position.
+### Reverse a Stack
+```cpp
+void insertAtBottom(stack<int> &s, int x) {
+
+    if (s.empty()) {
+
+        s.push(x);
+
+        return;
+
+    }
+
+    int top = s.top();
+
+    s.pop();
+
+    insertAtBottom(s, x);
+
+    s.push(top);
+
+}
+
+void reverseStack(stack<int> &stack) {
+
+    if (stack.empty()) return;
+
+    int top = stack.top();
+
+    stack.pop();
+
+    reverseStack(stack);
+
+    insertAtBottom(stack, top);
+
+}
+```
