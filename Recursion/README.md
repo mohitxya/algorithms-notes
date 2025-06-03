@@ -3,6 +3,9 @@
 - [Sort Stack (recursion)](#sort-stack-with-recursion)
 - [Reverse Stack](#reverse-a-stack)
 - [Binary Substrings](#generate-binary-substrings)
+- [Generate Parenthesis](#generate-parenthesis)
+- [Generate Subsequence](#generate-subsequence)
+
 
 ### Binary Exponentiation
 - If we are calculating $2^{10}$, instead of multiplying 2 10 times. Use this algorithm.
@@ -197,3 +200,62 @@ int main() {
 ```
 - Generates: 00,01,10,11. 
 - We can add conditions as well. (If the problem requires no consecutive 0s to be together)
+
+### Generate Parenthesis
+
+```cpp
+void generate(string &s, int open, int close, vector<string> &v)
+    {
+        if(open==0 && close==0)
+        {
+            v.push_back(s);
+            return;
+        }
+
+        if(open>0)
+        {
+            s.push_back('(');
+            generate(s,open-1,close,v);
+            s.pop_back();
+        }
+
+        if(close>0 && open<close)
+        {
+            s.push_back(')');
+            generate(s,open, close-1,v);
+            s.pop_back();
+        }
+    }
+```
+**Explanation:**
+- If open '(' is available use it.
+- If close is available and number of open used is more than close ')' used. Only then use close parenthesis.
+- `pop_back()` is the backtracking step. 
+
+### Generate subsequence
+e.g. [1,2]= [],[1],[2],[1,2]
+```cpp
+void generate(vector<int> &subset, int i, vector<int> &nums)
+
+    {
+
+        if(i==nums.size()){
+
+            subsets1.push_back(subset);
+
+            return;
+
+        }
+
+        //ith element not in subset
+
+        generate(subset, i+1, nums);
+		// ith element in subset
+        subset.push_back(nums[i]);
+
+        generate(subset,i+1, nums);
+
+        subset.pop_back();
+
+    }
+```
