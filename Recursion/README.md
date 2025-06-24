@@ -259,3 +259,57 @@ void generate(vector<int> &subset, int i, vector<int> &nums)
 
     }
 ```
+
+### Subsequences whose sum is k
+array = {1,2,1} sum =2 
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+void printS(int ind, vector<int> &ds, int s, int sum, int arr[], int n) {
+// here sum and n are constants. arr doesn't change.
+    if (ind == n) {
+        if (s == sum) {
+            for (auto it : ds) cout << it << " ";
+            cout << endl;
+        }
+        return;
+    }
+
+    // pick the element
+    ds.push_back(arr[ind]);
+    s += arr[ind];
+
+    printS(ind + 1, ds, s, sum, arr, n);
+
+    // backtrack
+    s -= arr[ind];
+    ds.pop_back();
+
+    // not pick the element
+    printS(ind + 1, ds, s, sum, arr, n);
+}
+
+int main() {
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int arr[] = {1, 2, 1};
+    int n = 3;
+    int sum = 2;
+    vector<int> ds;
+    printS(0, ds, 0, sum, arr, n);
+
+    return 0;
+}
+
+```
+
+![](attachments/Pasted%20image%2020250625001913.png)
+
+- For problems which require you to return a single solution:
+	-  **In the base case:** If condition satisfies return true else return false.
+	-  Add if `f()==true`, then return 
