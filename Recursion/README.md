@@ -5,6 +5,7 @@
 - [Binary Substrings](#generate-binary-substrings)
 - [Generate Parenthesis](#generate-parenthesis)
 - [Generate Subsequence](#generate-subsequence)
+- [Subsequence with sum k](#subsequences-whose-sum-is-k)
 
 
 ### Binary Exponentiation
@@ -310,6 +311,11 @@ int main() {
 
 ![](attachments/Pasted%20image%2020250625001913.png)
 
-- For problems which require you to return a single solution:
+- For problems which require you to **return a single solution**:
 	-  **In the base case:** If condition satisfies return true else return false.
-	-  Add if `f()==true`, then return 
+	-  Add if `f()==true`, then return true.
+	- So as soon as we encounter a true (condition satisfied). It starts a chain reaction.
+- For problems where you **count number of subsequences**:
+	- If condition satisfies, return 1 else return 0.
+	- then `l=f()` and `r=f()`, finally return `l+r`.
+	- works only if all elements of the array are positive.
