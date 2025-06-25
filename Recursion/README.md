@@ -319,3 +319,27 @@ int main() {
 	- If condition satisfies, return 1 else return 0.
 	- then `l=f()` and `r=f()`, finally return `l+r`.
 	- works only if all elements of the array are positive.
+
+#### If elements can be repeated :
+
+```cpp
+void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int>>& collect) {
+        if(i==arr.size())
+        {
+            if(target==0)
+            {
+                collect.insert(ds);
+            }
+            return;
+        }
+
+        if(arr[i] <= target)
+        {
+            ds.push_back(arr[i]);
+            printS(i,ds,target-arr[i],arr,collect);
+            ds.pop_back();
+        }
+
+        printS(i+1,ds,target,arr,collect);
+    }
+```
