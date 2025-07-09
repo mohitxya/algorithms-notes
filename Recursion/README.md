@@ -8,6 +8,7 @@
 - [Subsequence with sum k](#subsequences-whose-sum-is-k)
 - [Combination sum 1](#combination-sum-1)
 - [Combination sum 2](#combination-sum-2)
+- [Subset Sum 1](#Subset-Sum-1)
 
 
 ### Binary Exponentiation
@@ -373,7 +374,7 @@ void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int
 ```
 - time complexity: $2^{n}klog{m}$
 - optimized method:
-- f(ind, target, ds, ans )
+- f(index, target, ds, answer )
 ```cpp
 class Solution
 {
@@ -387,8 +388,8 @@ class Solution
 		}
 		for(int i=ind; i<arr.size(); i++)
 		{
-			if(i>ind && arr[i]==arr[i-1]) continue;
-			if(arr[i]>target) break;
+			if(i>ind && arr[i]==arr[i-1]) continue; //skips the current iteration
+			if(arr[i]>target) break; //exits the loop
 			ds.push_back(arr[i]);
 			findCombination(i+1, target-arr[i],arr,ans,ds);
 			ds.pop_back();
@@ -400,10 +401,40 @@ class Solution
 		sort(candidates.begin(), candidates.end());
 		vector<vector<int>> ans;
 		vector<int> ds;
-		findCombinations(0,target, candidates,ans,ds);
+		findCombination(0,target, candidates,ans,ds);
 		return ans;
 	}
 }
 ```
 - Time complexity: $2^{n}*k$, assuming k is the average length of every combination. 
 - Space complexity: $k*x$
+#### Subset Sum 1
+- for n=3 , possible subsets: $2^{n}$
+- Brute-force algorithm: Power set (takes: $2^{n}*N$)
+- select or not select
+- `f(index, s=0)` -> `f(ind+1, sum+a[index])`
+- time complexity:  $2^{N}*2^{N}log(2^{N})$
+```cpp
+void func(int ind, int sum, vector <int> &arr, int N, vector<int> &sumSubset)
+{
+	if(ind==N)
+	{
+		sumSubset.push_back(sum);
+		return;
+	}
+
+	//pick the element
+	func(ind+1, sum+arr[ind], arr, N, sumSubset);
+	// Do-not pick the element
+	func(ind+1, sum, arr, N, sumSubset);
+}
+
+vector<int> subsetSums(vector<int> arr, int N)
+{
+	vector<int> sumSubset;
+	func(0,0,arr,N,sumSubset);
+	sort(sumSubset.begin(), sumSubset.end());
+	return sumSubset;
+}
+```
+- No backtracking step; since we aren't modifying a data structure.
