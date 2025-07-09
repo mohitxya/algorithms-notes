@@ -6,6 +6,8 @@
 - [Generate Parenthesis](#generate-parenthesis)
 - [Generate Subsequence](#generate-subsequence)
 - [Subsequence with sum k](#subsequences-whose-sum-is-k)
+- [Combination sum 1](#combination-sum-1)
+- [Combination sum 2](#combination-sum-2)
 
 
 ### Binary Exponentiation
@@ -320,7 +322,8 @@ int main() {
 	- then `l=f()` and `r=f()`, finally return `l+r`.
 	- works only if all elements of the array are positive.
 
-#### Combination sum I: If elements can be repeated :
+#### Combination sum 1 
+- If elements can be repeated
 
 ```cpp
 void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int>>& collect) {
@@ -343,7 +346,8 @@ void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int
         printS(i+1,ds,target,arr,collect);
     }
 ```
-#### Combination Sum II: Can't pick any element more than once:
+#### Combination Sum 2 
+- Can't pick any element more than once.
 - After picking an element move to the next. 
 - Brute-force method:
  ```cpp
@@ -403,4 +407,3 @@ class Solution
 ```
 - Time complexity: $2^{n}*k$, assuming k is the average length of every combination. 
 - Space complexity: $k*x$
-- 
