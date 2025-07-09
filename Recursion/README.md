@@ -410,6 +410,7 @@ class Solution
 - Space complexity: $k*x$
 #### Subset Sum 1
 - for n=3 , possible subsets: $2^{n}$
+- We return all possible sums. 
 - Brute-force algorithm: Power set (takes: $2^{n}*N$)
 - select or not select
 - `f(index, s=0)` -> `f(ind+1, sum+a[index])`
