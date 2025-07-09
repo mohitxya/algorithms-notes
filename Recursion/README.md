@@ -320,7 +320,7 @@ int main() {
 	- then `l=f()` and `r=f()`, finally return `l+r`.
 	- works only if all elements of the array are positive.
 
-#### If elements can be repeated :
+#### Combination sum I: If elements can be repeated :
 
 ```cpp
 void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int>>& collect) {
@@ -343,3 +343,64 @@ void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int
         printS(i+1,ds,target,arr,collect);
     }
 ```
+#### Combination Sum II: Can't pick any element more than once:
+- After picking an element move to the next. 
+- Brute-force method:
+ ```cpp
+ void printS(int i, vector<int>& ds, int target, vector<int>& arr, set<vector<int>>& collect) {
+        if(i==arr.size())
+        {
+            if(target==0)
+            {
+                collect.insert(ds);
+            }
+            return;
+        }
+
+        if(arr[i] <= target)
+        {
+            ds.push_back(arr[i]);
+            printS(i+1,ds,target-arr[i],arr,collect);
+            ds.pop_back();
+        }
+
+        printS(i+1,ds,target,arr,collect);
+    }
+```
+- time complexity: $2^{n}klog{m}$
+- optimized method:
+- f(ind, target, ds, ans )
+```cpp
+class Solution
+{
+	public:
+	void findCombination(int ind, int target, vector <int> &arr, vector<vector<int>> &ans, vector<int> &ds)
+	{
+		if(target==0)
+		{
+			ans.push_back(ds);
+			return;
+		}
+		for(int i=ind; i<arr.size(); i++)
+		{
+			if(i>ind && arr[i]==arr[i-1]) continue;
+			if(arr[i]>target) break;
+			ds.push_back(arr[i]);
+			findCombination(i+1, target-arr[i],arr,ans,ds);
+			ds.pop_back();
+		}
+	}
+	public:
+	vector<vector<int>> combinationSum2(vector<int>& candidates, int target)
+	{
+		sort(candidates.begin(), candidates.end());
+		vector<vector<int>> ans;
+		vector<int> ds;
+		findCombinations(0,target, candidates,ans,ds);
+		return ans;
+	}
+}
+```
+- Time complexity: $2^{n}*k$, assuming k is the average length of every combination. 
+- Space complexity: $k*x$
+- 
