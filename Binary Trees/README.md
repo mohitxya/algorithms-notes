@@ -1,6 +1,6 @@
 ## Table of Contents
 - [Introduction](#introduction)
-
+- [Traversal techniques](#traversal-techniques)
 
 
 
@@ -46,3 +46,12 @@ int main(void)
 	root->left->right=new Node(5);
 }
 ```
+
+#### Traversal Techniques
+![](attachments/Pasted%20image%2020250710184957.png)
+
+- In-order traversal: left *root* right, `[4,2,8,5,1,6,3,9,7,10]`
+- Pre-order traversal: *root* left right, `[1,2,4,5,8,3,6,7,9,10]`
+- Post-order traversal: left right *root*, `[4,8,5,2,6,9,10,7,3,1]`
+- BFS (Breadth first): `[1,2,3,4,5,6,7,8,9,10]`
+- In, pre and post order traversal are parts of DFS.
