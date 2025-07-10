@@ -14,7 +14,6 @@
 
 ##### Types:
 1. Full Binary Tree: Either has 0 or 2 children.
-	![](attachments/Pasted%20image%2020250710160414.png)
 2. Complete Binary Trees: 
 	- All levels should be filled. 
 	- If last level is not filled, the nodes should be as left as possible.
