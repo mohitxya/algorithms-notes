@@ -1,7 +1,10 @@
 ## Table of Contents
 - [Introduction](#introduction)
-- [Traversal techniques](#traversal-techniques)
-
+- [Traversal Techniques](#traversal-techniques)  
+  - [Pre-order Traversal](#pre-order-traversal)  
+  - [In-order Traversal](#in-order-traversal)  
+  - [Post-order Traversal](#post-order-traversal)  
+  - [Level-order Traversal (BFS)](#level-order-traversal-bfs)
 
 
 #### Introduction
@@ -55,8 +58,9 @@ int main(void)
 - Post-order traversal: left right *root*, `[4,8,5,2,6,9,10,7,3,1]`
 - BFS (Breadth first): `[1,2,3,4,5,6,7,8,9,10]`
 - In, pre and post order traversal are parts of DFS.
-##### Pre-order traversal
+#### Pre-order traversal
 - Root Left Right
+**Using Recursion:**
 ```cpp
 void preorder(node)
 {
@@ -68,6 +72,8 @@ void preorder(node)
 ```
 - Time complexity: $O(n)$
 - space complexity: Height of the tree, $O(H)$
+**Using Iterative method:**
+
 ##### In-order traversal
 - Left Root Right
 ```cpp
@@ -96,3 +102,37 @@ void postorder(node)
 ```
 - Time complexity: $O(n)$
 - Space complexity: $O(H)$
+
+##### Level-order traversal BFS
+- BFS
+- We need a queue data structure.
+```cpp
+class Solution
+{
+public:
+	vector<vector<int>> levelOrder(TreeNode* root)
+	{
+		vector<vector<int>> ans;
+		if(root==nullptr) return ans;
+		queue<TreeNode*> q;
+		q.push(root);
+		while(!q.empty())
+		{
+			int size=q.size();
+			vector<int> level;
+			for(int i=0; i<size; i++){
+				TreeNode *node=q.front();
+				q.pop();
+				if(node->left!=nullptr) q.push(node->left);
+				if(node->right!=nullptr) q.push(node->right);
+				level.push_back(node->val);
+			}
+			ans.push_back(level);
+		}
+		return ans;
+	}
+}
+```
+
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
