@@ -61,6 +61,7 @@ int main(void)
 #### Pre-order traversal
 - Root Left Right
 **Using Recursion:**
+
 ```cpp
 void preorder(node)
 {
@@ -72,10 +73,43 @@ void preorder(node)
 ```
 - Time complexity: $O(n)$
 - space complexity: Height of the tree, $O(H)$
+
 **Using Iterative method:**
 
+- We use a stack. 
+- Put root onto stack. Print it out. 
+- Then put it's right node and left node onto the stack. 
+- Take the topmost element and print it out.
+- Repeat this until the stack becomes empty.
+```cpp
+vector<int> preorder;
+if(root==nullptr) return preorder;
+
+stack<TreeNode*> st;
+st.push(root);
+while(!st.empty())
+{
+	root=st.top();
+	st.pop();
+	preorder.push_back(root->val);
+	if(root->right!=nullptr)
+	{
+		st.push(root->right);
+	}
+	if(root->left!=nullptr)
+	{
+		st.push(root->left);
+	}
+}
+return preorder;
+```
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 ##### In-order traversal
 - Left Root Right
+
+ **Using recursion:**
+ 
 ```cpp
 void inorder(node)
 {
@@ -89,8 +123,38 @@ void inorder(node)
 - Each node is visited exactly once. 
 - Space complexity: Height of tree, $O(H)$
 
+**Using iterative method:**
+
+- We'll use a stack. LIFO data structure.
+```cpp
+stack<TreeNode*> st;
+TreeNode* node = root;
+vector<int> inorder;
+while(true)
+{
+	if(node!=nullptr)
+	{
+		st.push(node);
+		node=node->left;
+	}
+	else
+	{
+		if(st.empty()==true) break;
+		node = st.top();
+		st.pop();
+		inorder.push_back(node->val);
+		node = node-> right;
+	}
+}
+return inorder;
+
+```
+- Time and space complexity is same.
 ##### Post-order traversal
 - Left Right Root
+
+**Using Recursion:**
+
 ```cpp
 void postorder(node)
 {
@@ -103,6 +167,32 @@ void postorder(node)
 - Time complexity: $O(n)$
 - Space complexity: $O(H)$
 
+**Using iterative method:**
+
+- Using two stacks.
+- Use two stack st1 and st2.
+- Put the root in st1, When the iteration starts take out the top from st1 and put it into st2. 
+- Check if the node has left and right, if it does put it into stack 1. Again, take out the top element and repeat the process till stack 1 gets empty.
+```cpp
+ vector<int> postorder;
+ if(root==nullptr) return postorder;
+ stack<TreeNode*> st1,st2;
+ st1.push(root);
+ while(!st1.empty())
+ {
+	 root=st1.top();
+	 st1.pop();
+	 st2.push(root);
+	 if(root->left!=nullptr) st1.push(root->left);
+	 if(root->right!=nullptr) st1.push(root->right);
+ }
+ while(!st2.empty())
+ {
+	 postorder.push_back(st2.top());
+	 st2.pop();
+ }
+ return postorder;
+```
 ##### Level-order traversal BFS
 - BFS
 - We need a queue data structure.
