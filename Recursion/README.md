@@ -9,6 +9,7 @@
 - [Combination sum 1](#combination-sum-1)
 - [Combination sum 2](#combination-sum-2)
 - [Subset Sum 1](#Subset-Sum-1)
+- [Subset Sum 2](#subset-sum-2)
 
 
 ### Binary Exponentiation
@@ -439,3 +440,46 @@ vector<int> subsetSums(vector<int> arr, int N)
 }
 ```
 - No backtracking step; since we aren't modifying a data structure.
+
+#### Subset Sum 2
+- Use algo from subset sum 1 for brute-force method. 
+- To remove duplicates add to a set then convert that set to vector. 
+```cpp
+class Solution {
+public:
+    void func(int ind, vector<int> &arr, int N, vector<int> &collect, set<vector<int>> &ans)
+    {
+        if(ind==N)
+        {
+            vector<int> temp=collect;
+            sort(temp.begin(),temp.end());
+            ans.insert(temp);
+            return;
+        }
+        //pick
+        collect.push_back(arr[ind]);
+        func(ind + 1, arr, N, collect, ans);
+        collect.pop_back(); // Backtrack
+        // Not pick
+        func(ind + 1, arr, N, collect, ans);
+    }
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        int n=nums.size();
+        // Place to store the subsets.
+        set<vector<int>> ans;
+        vector<int> collect;
+        func(0,nums,n,collect,ans);
+        vector<vector<int>> final_answer(ans.begin(),ans.end());
+        return final_answer;
+    }
+};
+```
+- time complexity: m x log(m) ,where m=$2^{m}$.
+- **Optimize the recursion:**
+-  ![](attachments/Pasted%20image%2020250710121906.png)
+- We skip over same elements at the same level.
+- We iterate from index - (N-1). 
+- Time complexity: $2^{n}n$
+- Space complexity: $O(2^{n})*O(k)$
+- avg length of subset: k
