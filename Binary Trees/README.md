@@ -55,3 +55,44 @@ int main(void)
 - Post-order traversal: left right *root*, `[4,8,5,2,6,9,10,7,3,1]`
 - BFS (Breadth first): `[1,2,3,4,5,6,7,8,9,10]`
 - In, pre and post order traversal are parts of DFS.
+##### Pre-order traversal
+- Root Left Right
+```cpp
+void preorder(node)
+{
+	if(node==null) return;
+	print(node->data);
+	preorder(node->left);
+	preorder(node->right);
+}
+```
+- Time complexity: $O(n)$
+- space complexity: Height of the tree, $O(H)$
+##### In-order traversal
+- Left Root Right
+```cpp
+void inorder(node)
+{
+	if(node==null) return;
+	inorder(node->left);
+	print(node->data);
+	inorder(node->right);
+}
+```
+- Time complexity: $O(n)$
+- Each node is visited exactly once. 
+- Space complexity: Height of tree, $O(H)$
+
+##### Post-order traversal
+- Left Right Root
+```cpp
+void postorder(node)
+{
+	if(node==null) return;
+	postorder(node->left);
+	postorder(node->right);
+	print(node->data);
+}
+```
+- Time complexity: $O(n)$
+- Space complexity: $O(H)$
