@@ -483,3 +483,32 @@ public:
 - Time complexity: $2^{n}n$
 - Space complexity: $O(2^{n})*O(k)$
 - avg length of subset: k
+```cpp
+class Solution
+{
+	private:
+		void findSubsets(int ind, vector<int> &nums, vector<int> &ds, vector<vector<int>> &ans)
+		{
+			ans.push_back(ds);
+			for(int i=ind; i<nums.size(); i++)
+			{
+				// if it's the first index pick
+				if(i!=ind && nums[i]==nums[i-1]) continue;
+				// we skip the iteration if condition satisfies.
+				ds.push_back(nums[i]);
+				findSubsets(i+1, nums, ds, ans);
+				ds.pop_back();
+			}
+		}
+	public:
+		vector<vector<int>> subsetsWithDup(vector<int> &nums)
+		{
+			vector<vector<int>> ans;
+			vector<int> ds;
+			sort(nums.begin(),nums.end());
+			// so duplicates are together.
+			findSubsets(0,nums,ds,ans);
+			return ans;
+		}
+}
+```
