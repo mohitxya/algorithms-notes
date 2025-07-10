@@ -10,6 +10,7 @@
 - [Combination sum 2](#combination-sum-2)
 - [Subset Sum 1](#Subset-Sum-1)
 - [Subset Sum 2](#subset-sum-2)
+- [Combination sum 3](#combination-sum-3)
 
 
 ### Binary Exponentiation
@@ -511,4 +512,38 @@ class Solution
 			return ans;
 		}
 }
+```
+
+#### Combination sum 3
+- find k digits which add up to n. 
+- digits must be between 1 through 9. Don't repeat.
+```cpp
+class Solution {
+
+private:
+    void func(int ind, int k, int n, vector<int> &ans, vector<vector<int>> &collect)
+    {
+	    if (k < 0 || n < 0) return;// prunes bad paths
+        if(k==0 && n==0)
+        {
+            collect.push_back(ans);
+            return;
+        }
+        for(int i=ind; i<=9; i++)
+        {
+            ans.push_back(i);
+            func(i+1,k-1,n-i,ans,collect);
+            ans.pop_back();
+        }
+    }
+public:
+
+    vector<vector<int>> combinationSum3(int k, int n) {
+        // find k numbers which sum to n
+        vector<vector<int>> collect;
+        vector<int> ans;
+        func(1,k,n,ans,collect);
+        return collect;
+    }
+};
 ```
