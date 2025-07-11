@@ -9,6 +9,7 @@
 - [Maximum Depth in Binary Tree](#maximum-depth-in-binary-tree)
 - [Check for balanced Binary Tree](#check-for-balanced-binary-tree)
 - [Diameter of binary Tree](#diameter-of-binary-tree)
+- [Max Path Sum](#max-path-sum)
 
 
 #### Introduction
@@ -400,3 +401,24 @@ int findMax(Node* node, int &maxi) {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
+#### Max path sum
+- Node A to Node B.
+- which path gives max sum.
+![](attachments/Pasted%20image%2020250711214327.png)
+- maxi=42
+```cpp
+int maxPathSum(TreeNode* root)
+{
+	int maxi=INT_MIN;
+	maxPathDown(root,maxi);
+	return maxi;
+}
+int maxPathDown(TreeNode* node, int& maxi)
+{
+	if(node==nullptr) return 0;
+	int left=max(0,maxPathDown(node->left, maxi));
+	int right=max(0,maxPathDown(node->right,maxi));
+	maxi = max(maxi, left+right+node->val);
+	return max(left,right) + node->val;
+}
+```
