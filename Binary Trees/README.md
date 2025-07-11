@@ -6,6 +6,8 @@
   - [Post-order Traversal](#post-order-traversal)  
   - [Level-order Traversal (BFS)](#level-order-traversal-bfs)
   - [Three Traversal in one](#three-traversal-in-one)
+  - [Maximum Depth in Binary Tree](#)
+  - [Check for balanced Binary Tree](#)
 
 
 #### Introduction
@@ -347,3 +349,53 @@ bool check(Node)
 ```
 - Time complexity: $O(n^{2})$
 - We need to remove this $O(n)$ complexity. 
+```cpp
+ int height(TreeNode* root)
+ {
+	 if(root==nullptr) return 0;
+	 int leftheight=height(root->left);
+	 if(leftheight==-1) return -1;
+	 int rightheight=height(root->right);
+	 if(rightheight==-1) return -1;
+	 if(abs(leftheight-rightheight)>1) return -1;
+	 return max(leftheight,rightheight)+1;
+ }
+```
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
+
+#### Diameter of binary tree
+- longest path between two nodes. (number of edges)
+- Path doesn't need to pass via root.
+- Basically do recursive traversal + find $max(lh+rh)$
+- Basic method:
+```cpp
+// pseudo code
+void findmax(node){
+	if(root==nullptr) return;
+	lh=findleft(node->left);
+	rh=findright(node->right);
+	max = max(max,lh+rh);
+	findmax(node->left);
+	findmax(node->right);
+}
+```
+- Takes $O(n^{2})$ time complexity.
+- Optimized method:
+```cpp
+int findMax(Node* node, int &maxi) {
+    if (node == NULL)
+        return 0;
+
+    int lh = findMax(node->left, maxi);
+    int rh = findMax(node->right, maxi);
+
+    maxi = max(maxi, lh + rh);
+
+    return 1 + max(lh, rh);
+}
+
+```
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
+
