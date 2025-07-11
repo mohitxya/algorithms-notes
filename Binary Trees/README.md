@@ -313,3 +313,37 @@ if num==3
 	 }
  }
 ```
+
+#### Maximum Depth in Binary Tree
+- Recursive: queue $O(n)$
+- Level order: auxiliary space $O(height)$ 
+```cpp
+if(root==nullptr) return o;
+int lh=maxDepth(root->left);
+int rh=maxDepth(root->right);
+return 1+max(lh,rh);
+```
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
+#### Check for Balanced Binary Tree
+- For every node, height of left - height of right <= 1.
+- basic solution:
+```cpp
+bool check(Node)
+	if node==null
+		return true
+		// the part below adds the extra complexity
+	lh=findHleft(node->left);
+	rh=findHRight(node->right);
+
+	if(abs(rh-lh)>1) return false;
+
+	bool left=check(node->left);
+	bool right=check(node->right);
+
+	if(!left||!right) return false;
+	// if either returns false
+	return true;
+```
+- Time complexity: $O(n^{2})$
+- We need to remove this $O(n)$ complexity. 
