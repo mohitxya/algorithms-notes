@@ -10,6 +10,7 @@
 - [Check for balanced Binary Tree](#check-for-balanced-binary-tree)
 - [Diameter of binary Tree](#diameter-of-binary-tree)
 - [Max Path Sum](#max-path-sum)
+- [Same Tree Check](#same-tree)
 
 
 #### Introduction
@@ -422,4 +423,17 @@ int maxPathDown(TreeNode* node, int& maxi)
 	maxi = max(maxi, left+right+node->val);
 	return max(left,right) + node->val;
 }
+```
+#### Same Tree
+```cpp
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (!p && !q) return true;          
+        if (!p || !q) return false;         
+        if (p->val != q->val) return false;
+        return isSameTree(p->left, q->left) &&
+               isSameTree(p->right, q->right);
+    }
+};
 ```
