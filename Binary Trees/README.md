@@ -6,9 +6,9 @@
   - [Post-order Traversal](#post-order-traversal)  
   - [Level-order Traversal (BFS)](#level-order-traversal-bfs)
   - [Three Traversal in one](#three-traversal-in-one)
-  - [Maximum Depth in Binary Tree](#maximum-depth-in-binary-tree)
-  - [Check for balanced Binary Tree](#check-for-balanced-binary-tree)
-  - [Diameter of binary Tree](#diameter-of-binary-tree)
+- [Maximum Depth in Binary Tree](#maximum-depth-in-binary-tree)
+- [Check for balanced Binary Tree](#check-for-balanced-binary-tree)
+- [Diameter of binary Tree](#diameter-of-binary-tree)
 
 
 #### Introduction
