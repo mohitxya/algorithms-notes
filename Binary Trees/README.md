@@ -404,6 +404,7 @@ int findMax(Node* node, int &maxi) {
 #### Max path sum
 - Node A to Node B.
 - which path gives max sum.
+- 
 ![](attachments/Pasted%20image%2020250711214327.png)
 - maxi=42
 ```cpp
