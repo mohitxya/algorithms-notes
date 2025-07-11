@@ -5,6 +5,7 @@
   - [In-order Traversal](#in-order-traversal)  
   - [Post-order Traversal](#post-order-traversal)  
   - [Level-order Traversal (BFS)](#level-order-traversal-bfs)
+  - [Three Traversal in one](#three-traversal-in-one)
 
 
 #### Introduction
@@ -193,6 +194,39 @@ void postorder(node)
  }
  return postorder;
 ```
+
+
+**Using a single stack**
+- `curr` points to the `root` of the tree.
+-  Time complexity: $O(2n)$
+```cpp
+while(curr!=nullptr || !st.isempty())
+{
+	if(curr!=null){
+		st.push(curr);
+		curr=curr->left;
+	}
+	else
+	{
+		temp=st.top()->right;
+		if(temp==nullptr)
+		{
+			temp=st.top();
+			st.pop();
+			post.push_back(temp);
+			while(!st.empty && temp==st.top()->right)
+			{
+				temp=st.top(),st.pop();
+				post.push_back(temp->val)
+			}
+		}
+		else
+		{
+			curr=temp;
+		}
+	}
+}
+```
 ##### Level-order traversal BFS
 - BFS
 - We need a queue data structure.
@@ -226,3 +260,56 @@ public:
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+##### Three traversal in one
+- maintain a single stack with (value ,number)
+- Algorithm:
+```python
+if num==1:
+	preorder
+	++
+	left
+if num==2
+	inorder
+	right
+if num==3
+	postorder
+	erase
+```
+- Time complexity: $O(3n)$
+- Space complexity: $O(4n)$
+ ```cpp
+ stack<pair<TreeNode*,int>> st;
+ st.push({root,1});
+ vector<int> pre,in,post;
+ if(root==nullptr) return;
+ while(!st.empty())
+ {
+	 auto it=st.top();
+	 st.pop();
+	 if(it.second==1)
+	 {
+		 pre.push_back(it.first->val);
+		 it.second++;
+		 st.push(it)
+		 if(it.first->left !=nullptr)
+		 {
+			 st.push(it.first->left,1);
+		 }
+	 }
+	 else if(it.second==2)
+	 {
+		 in.push_back(it.first->val);
+		 it.second++;
+		 st.push(it);
+		 if(it.first->right != nullptr)
+		 {
+			 st.push({it.first->right,1});
+		 }
+	 }
+	 else
+	 {
+		 post.push_back(it.first->val);
+	 }
+ }
+```
