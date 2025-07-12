@@ -592,5 +592,56 @@ vector<int> topView(Node* root)
 	}
 }
 ```
+- Time and space complexity: $O(n)$
 ##### Bottom View
+- ![](attachments/Pasted%20image%2020250712231731.png)
+- bottom view: {4,5,6,9,7}
+- If overlap (5 and 6), take the right one.
+- Take a queue data structure and a map data structure. 
+- map should contain `(line,node)`
+- Populate the ds and replace when you encounter same line number.
+```cpp
+vector<int> bottomView(Node* root)
+{
+	vector<int> ans;
+	if(root==nullptr) return ans;
+	map<int,int> mpp;
+	queue<pair<Node*,int>> q;
+	q.push({root,0});
+	while(!q.empty())
+	{
+		auto it=q.front();
+		q.pop();
+		Node* node=it.first;
+		int line=it.second;
+		mpp[line]=node->data;
+		if(node->left!=nullptr) q.push({node->left,line-1});
+		if(node->right!=nullptr) q.push({node->right,line+1});
+
+		for(auto it:mpp)
+		{
+			//map is ordered by keys by default
+			ans.push_back(it.second);
+		}
+		return ans;
+	}
+}
+```
+- Time and space complexity: $O(n)$
 ##### Right View
+- ![](attachments/Pasted%20image%2020250712233820.png)
+- right view: {1,3,7,6}
+- Last node of every level.
+- First node of every level if I were to travel in opposite direction.
+- Recursive or Iterative.
+- We use the reverse pre-order traversal: root, right, left.
+```cpp
+void rightView(Node* node, int level, vector<int>& ans)
+{
+	if(node==nullptr) return;
+	if(level==ds.size()) ans.push_back(node);
+	rightView(node->right, level+1,ans);
+	rightView(node->left,level+1,ans);
+	
+}
+```
