@@ -13,6 +13,10 @@
 - [Same Tree Check](#same-tree)
 - [Zig Zag Traversal](#zig-zag-traversal)
 - [Boundary Traversal](#boundary-traversal)
+- [View Problems](#view-problems)
+	- [Top View](#top-view)
+	- [Bottom View](#bottom-view)
+	- [Right View](#right-view)
 
 
 #### Introduction
@@ -66,7 +70,7 @@ int main(void)
 - Post-order traversal: left right *root*, `[4,8,5,2,6,9,10,7,3,1]`
 - BFS (Breadth first): `[1,2,3,4,5,6,7,8,9,10]`
 - In, pre and post order traversal are parts of DFS.
-#### Pre-order traversal
+##### Pre-order traversal
 - Root Left Right
 **Using Recursion:**
 
@@ -237,6 +241,7 @@ while(curr!=nullptr || !st.isempty())
 ##### Level-order traversal BFS
 - BFS
 - We need a queue data structure.
+- Traverse level by level. Left to Right.
 ```cpp
 class Solution
 {
@@ -504,3 +509,88 @@ public:
 - Space complexity: $O(n)$ (Algorithmic complexity)
 
 #### Vertical Order Traversal
+   - Vertically traverse the tree. 
+   - We add coordinates to the tree. (0,0) at the root. 
+   - ![](attachments/Pasted%20image%2020250712180056.png)
+
+```cpp
+class Solution
+{
+	public: 
+		vector<vector<int>> verticalTraversal(TreeNode* root)
+		{
+			map<int, map<int,multiset<int>>> nodes;
+			// vertical levels multinodes
+			queue<pair<TreeNode*,pair<int,int>>> todo;
+			// node and it's coordinates
+			todo.push({root,(0,0)});
+			while(!todo.empty())
+			{
+				auto p=todo.front();
+				todo.pop();
+				int x = p.second.first, y=p.second.second;
+				nodes[x][y].insert(node->val);
+				if(node->left)
+				{
+					todo.push(node->left,{x-1,y+1});
+				}
+				if(node->right)
+				{
+					todo.push(node->right, {x+1,y+1});
+				}
+			}
+			vector<vector<int>> ans;
+			for(auto p: nodes)
+			{
+			// iterate through all the verticals
+				vector<int> col;
+				for(auto q: p.second)
+				{
+				// for all levels insert q
+					col.insert(col.end(), q.second.begin(), q.second.end());
+				}
+				ans.push_back(col);
+			}
+			return ans;
+		}
+}
+```
+
+#### View Problems
+##### Top View
+- ![](attachments/Pasted%20image%2020250712212646.png)
+- top view: {4,2,1,3,7}
+- We do a modified level traversal
+- Label from -2 to +2. concept from "Vertical Order Traversal"
+- Two data structures: Queue and `map<line,node>`
+```cpp
+vector<int> topView(Node* root)
+{
+	vector<int> ans;
+	if(root==nullptr) return ans;
+	map<int,int> mpp;
+	queue<pair<Node*,int>> q;
+	// node and vertical coordinate
+	q.push({root,0});
+	while(!q.empty())
+	{
+		auto it=q.front();
+		q.pop();
+		Node* node=it.first; // e.g. 1
+		int line=it.second; // e.g. 0
+		// if it doesn't exist in the map add it.
+		if(mpp.find(line)==mpp.end()) mpp[line]=node->data;
+		
+		if(node->left!=nullptr) q.push({node->left,line-1});
+		if(node->right !=nullptr) q.push({node->right, line+1});
+	for(auto it:mpp)
+	{
+		ans.push_back(it.second);
+	}
+
+	return ans;
+	}
+}
+```
+##### Bottom View
+##### Right View
