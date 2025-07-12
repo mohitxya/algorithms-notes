@@ -11,6 +11,8 @@
 - [Diameter of binary Tree](#diameter-of-binary-tree)
 - [Max Path Sum](#max-path-sum)
 - [Same Tree Check](#same-tree)
+- [Zig Zag Traversal](#zig-zag-traversal)
+- [Boundary Traversal](#boundary-traversal)
 
 
 #### Introduction
@@ -437,3 +439,68 @@ public:
     }
 };
 ```
+#### Zig Zag Traversal
+- Maintain a flag, `leftToRight` which is 0 by default. 
+- In the for loop add `int index=leftToRight?i:size-i-1`
+
+#### Boundary Traversal
+- anti-clock wise boundary traversal.
+- Order:
+	 - Left boundary excluding leaves.
+	 - Leaf nodes.
+	 - Right boundary (reverse) excluding leaves.
+- ds, root into ds. Next add the left node if available, else the right node. Do this till you reach the leaf nodes.
+-  Then do an In-order traversal. Only add the leaf nodes.
+- Do the first step, but in reverse order. i.e. take right.
+```cpp
+void addLeftBoundary(Node* node, vector<int> &res)
+{
+	Node* cur= root->left;
+	while(cur){
+		if(!isLeaf(cur)) res.push_back(cur->data);
+		if(cur->left) cur=cur->left;
+		else cur = cur->right;
+	}
+}
+void addLeaves(Node* node, vector<int> &res)
+{
+	if(isLeaf(node))
+	{
+		res.push_back(node->data);
+		return;
+	}
+	if(root->left) addLeaves(root->left,res);
+	if(root->right) addLeaves(root->right, res);
+}
+void addRightBoundary(Node* node, vector<int> &res)
+{
+	Node* cur=root->right;
+	vector<int> tmp;
+	while(cur)
+	{
+		if(!isLeaf(cur)) tmp.push_back(cur->data);
+		if(cur->right) cur=cur->right;
+		else cur=cur->left;
+	}
+	// you take the reverse
+	for(int i=tmp.size()-1; i>=0; --i)
+	{
+		res.push_back(tmp[i]);
+	}
+}
+public:
+	vector<int> printBoundary(Node* root)
+	{
+		vector<int> res;
+		if(!root) return res;
+		if(!isleaf(root)) res.push_back(root->data)
+		addLeftBoundary(root, res);
+		addLeaves(root,res);
+		addRightBoundary(root, res);
+		return res;
+	}
+```
+- Time complexity: $O(n)+O(n)+O(H)$
+- Space complexity: $O(n)$ (Algorithmic complexity)
+
+#### Vertical Order Traversal
