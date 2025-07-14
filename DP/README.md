@@ -212,3 +212,35 @@ at each iteration
 2: Task 3
 3: No task performed
 ```
+- Example: `f(2,1)` means max merit points for indexes from 0 to 2 given that task performed at 3 was '1'.
+- recursive pseudo-code:
+```
+f(day,last)
+{
+	if(day==0){
+		maxi=0
+		for(int i=0; i<=2; i++)
+		{
+			if(i!=last)
+			{
+				maxi=max(maxi,points[0][i])
+			}
+		}
+		// in the base case simply choose the activity which gives you the max score.
+		return maxi
+	}
+	maxi=0
+	for(int i=0; i<=2; i++)
+	{
+		if(i!=last)
+		{
+			activity=points[day][i]+f(day-1,i)
+			maxi=max(maxi,activity)
+		}
+	}
+	return maxi
+}
+
+```
+- N x 4 size array. 
+- Now, using `Memoization`:
