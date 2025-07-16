@@ -13,6 +13,9 @@
 	- [Ninja and his friends](#ninja-and-his-friends)
 - DP on subsequences
 	 - [Subset Sum](#subset-sum) 
+	 - [Partition Equal Subset Sum](#partition-equal-subset-sum)
+	 - [Minimize Sum Difference](#minimize-sum-difference)
+	 - 
 
 
 
@@ -563,3 +566,9 @@ f(ind,target)
 - Time and space complexity: $O(N*target)$
 - After space optimization, $O(target)$
 
+#### Partition Equal Subset Sum
+- s1=s2
+- `s=total sum/2`
+- if s is odd then it's not  possible.
+- set target to s.
+#### Minimize Sum Difference
