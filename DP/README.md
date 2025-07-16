@@ -435,4 +435,35 @@ public:
 #### Ninja and his friends
 - Doing it individually doesn't work.
 >Whenever there's a variable ending point. Start the recursion from the starting point.
+-  base case: destination, out of bound.
+- Always write out of bounds first.
+- They both reach destination at the same time.
+- For every movement of Alice, Bob can also move to 3 different paths.
+- 3X3
+```
+f(i1,j1,i2,j2)
+{
+	if(j1<0 || j1>=m || j2<0 || j2>m) return -1e8
+	if dp!=-1 return dp
+	if(i==n-1)
+	{
+		if(j1==j2) return a[i][j1];
+		else return a[i][j1]+a[i][j2];
+	}
+	// explore all paths
+	maxi=0
+	for(dj1 -1 to +1)
+		for(dj2 -1 to +1)
+			if(j1==j2) maxi=max of maxi,a[i][j1]+f(i+1,j1+dj1,j2+dj2)
+			else maxi=max of maxi,a[i][j1]+a[i][j2]+f(i+1,j1+dj1,j2+dj2)
+	return dp=maxi
+}
+```
+- Time complexity: $3^{n}*3^{n}$ exponential (without `memoization`)
+- Space complexity: $O(n)$ auxiliary stack space
+- N x M x M matrix.
+- Time complexity: $O(N*M*M)$
+- Space complexity: $O(N*M*M)$ + $O(N)$
+
+**Tabulation method:**
 - 
