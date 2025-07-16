@@ -10,6 +10,9 @@
 	- [Grid Unique Paths](#grid-unique-paths)
 	- [Minimum Path Sum](#minimum-path-sum)
 	- [Minimum Falling Path](#minimum-falling-path)
+	- [Ninja and his friends](#ninja-and-his-friends)
+- DP on subsequences
+	 - [Subset Sum](#subset-sum) 
 
 
 
@@ -466,4 +469,97 @@ f(i1,j1,i2,j2)
 - Space complexity: $O(N*M*M)$ + $O(N)$
 
 **Tabulation method:**
-- 
+```
+1. Write the base case.
+	- for j1 0 to m-1
+	- for j2 0 to m-1
+	- if j1=j2 dp[n-1][j1][j2]= grid[n-1][j1]
+	- else dp[n-1][j1][j2]=grid[n-1][j1]+grid[n-1][j2]
+2. Express every state in for loops.
+	- i n-2 to 0
+	- j1 0 to m-1
+	- j2 0 to m-1
+	- for(dj1 -1 to +1)
+		for(dj2 -1 to +1)
+			if(j1==j2) maxi=max of maxi,a[i][j1]+f(i+1,j1+dj1,j2+dj2)
+			else maxi=max of maxi,a[i][j1]+a[i][j2]+f(i+1,j1+dj1,j2+dj2)
+3. Space optimization
+```
+- Base case:
+```cpp
+for(int j1=0; j1 < m; j1++) {
+    for(int j2=0; j2 < m; j2++) {
+        if(j1 == j2)
+            dp[n-1][j1][j2] = grid[n-1][j1];
+        else
+            dp[n-1][j1][j2] = grid[n-1][j1] + grid[n-1][j2];
+    }
+}
+```
+- Transition:
+```cpp
+for(int i = n-2; i >= 0; i--) {
+    for(int j1 = 0; j1 < m; j1++) {
+        for(int j2 = 0; j2 < m; j2++) {
+        // try all paths
+            int maxi = INT_MIN;
+            for(int dj1 = -1; dj1 <= 1; dj1++) {
+                for(int dj2 = -1; dj2 <= 1; dj2++) {
+                    int nj1 = j1 + dj1;
+                    int nj2 = j2 + dj2;
+                    if(nj1 >=0 && nj1 < m && nj2 >=0 && nj2 < m) {
+                        int value = (j1 == j2) ? grid[i][j1] : grid[i][j1] + grid[i][j2];
+                        value += dp[i+1][nj1][nj2];
+                        maxi = max(maxi, value);
+                    }
+                }
+            }
+            dp[i][j1][j2] = maxi;
+        }
+    }
+}
+
+```
+- To space optimize: Use only `curr` and `front`
+```cpp
+return front[0][m-1];
+```
+- **Time Complexity:** $O(N * M * M * 9)$
+- Space complexity: $O(M^{2})$ (After space optimization)
+
+#### Subset Sum
+```
+f(ind,target)
+{
+	if(target==0) return true;
+	if(ind==0) return (a[0]==target)
+	if(dp!=-1) return dp
+	bool notpick=f(ind-1,target);
+	bool pick= false
+		if(target>=a[ind]) pick=f(ind-1,target-a[ind])
+
+	return dp=pick || notpick
+}
+```
+- Time complexity: $O(2^{n})$
+- Space complexity: $O(n)$
+- After `memoization`:
+- Time complexity: $O(N*target)$
+- Space complexity: $O(N*target)+$$O(n)$
+- Tabulation:
+```
+1. declare dp array of same size. dp[n][target]
+2. for i=0 to n-1: dp[i][0]=true
+3. dp[0][arr[0]] is also true.
+4. Form the nested loop:
+	- ind: 1 to n-1.
+	- target: 1 to target
+	- same recurrence condition.
+5. return dp[n-1][k]
+```
+- `dp[i][t]` is true, if subset with sum 't' can be formed from first i elements.
+- For every index i `dp[i][0]` is always possible.
+- Also, `dp[0][arr[0]]` is always true.
+- Time and space complexity: $O(N*target)$
+- After space optimization, $O(target)$
+
