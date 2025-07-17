@@ -572,3 +572,111 @@ f(ind,target)
 - if s is odd then it's not  possible.
 - set target to s.
 #### Minimize Sum Difference
+  - Same process as the tabulation method for subset sum.
+```
+for(i = 0 to total sum)
+	if(dp[n-1][i]==true)
+		s1=i
+		s2=totsum-i
+		mini=min(mini,abs(s2-s1))
+```
+- We find out all the sums that are possible. We find out the other sum by the equation `total - sum= other sum`.
+- To further optimize only check till half.
+```cpp
+bool subsetSumToK(int n, int k, vector<int>& arr) {
+    vector<vector<bool>> dp(n, vector<bool>(k + 1, 0));
+    // base condition:
+    for(int i = 0; i < n; i++) {
+        dp[i][0] = true;  // Sum 0 is always possible
+    }
+    if(arr[0] <= k)
+        dp[0][arr[0]] = true;  
+    // for loops:
+    for(int ind = 1; ind < n; ind++) {
+        for(int target = 1; target <= k; target++) {
+            bool notTake = dp[ind - 1][target];
+            bool take = false;
+            if(arr[ind] <= target)
+                take = dp[ind - 1][target - arr[ind]];
+            dp[ind][target] = take || notTake;
+        }
+    }
+    return dp[n - 1][k];
+}
+```
+- This approach only works with positive numbers.
+- Use Meet in the Middle approach.
+- Power set method:
+```
+write 0 to 2^n-1 in bit representation.
+for e.g. S="abc" 0 0 1 says pick a, 0 1 0 says pick b.
+
+for (num= 0 to (1<<n)-1)
+	for(i = 0 to n-1)
+		if(num & (1<<i))
+			sub+s[i]
+	print(sub)	
+```
+- Time complexity: $O(2^{n}*n)$
+- Space complexity: $O(1)$
+```cpp
+class Solution {
+public:
+    int minimumDifference(vector<int>& nums) {
+        // We use half the size of the input array for convenience.
+        int halfSize = nums.size() >> 1; // Same as dividing by 2 using right-shift.
+        // f and g will store subsets sums for the first and second half respectively.
+        vector<vector<int>> sumFirstHalf(halfSize + 1), sumSecondHalf(halfSize + 1);
+
+        // Iterate over all possible subsets for both halves.
+        for (int subset = 0; subset < (1 << halfSize); ++subset) {
+            int sum1 = 0, count1 = 0;
+            int sum2 = 0, count2 = 0;
+           // Calculate the subsets sums and their sizes for both halves.
+            for (int j = 0; j < halfSize; ++j) {
+                if (subset & (1 << j)) {
+                    sum1 += nums[j]; // Add to sum for first half.
+                    ++count1; // Increment count for first half.
+                    sum2 += nums[halfSize + j]; // Add to sum for second half.
+                    ++count2; // Increment count for second half.
+                } else {
+                    sum1 -= nums[j]; // Subtract from sum for first half.
+                    sum2 -= nums[halfSize + j]; // Subtract from sum for second half.
+                }
+            }
+            // Store the calculated sums in f and g based on their respective counts.
+            sumFirstHalf[count1].push_back(sum1);
+            sumSecondHalf[count2].push_back(sum2);
+        }
+        // Sort the subsets sums for each possible count for easier lookup later.
+        for (int i = 0; i <= halfSize; ++i) {
+            sort(sumFirstHalf[i].begin(), sumFirstHalf[i].end());
+            sort(sumSecondHalf[i].begin(), sumSecondHalf[i].end());
+        }
+        // Initialize the answer with the largest possible integer value.
+        int answer = INT_MAX;
+        // Iterate over all pairs of subset from first and second halves.
+        for (int i = 0; i <= halfSize; ++i) {
+            for (int firstHalfSum : sumFirstHalf[i]) {
+                int target = -firstHalfSum; // We want to find the closest to -firstHalfSum in second half.
+                // Binary search for the closest value in the second half with complementing size.
+                int left = 0, right = sumSecondHalf[halfSize - i].size() - 1;
+                while (left < right) {
+                    int mid = (left + right) >> 1;
+                    if (sumSecondHalf[halfSize - i][mid] >= target)
+                        right = mid;
+                    else
+                        left = mid + 1;
+                }
+                // Update answer with the closest match before or at the binary search result.
+                answer = min(answer, abs(firstHalfSum + sumSecondHalf[halfSize - i][left]));
+                if (left > 0)
+                    answer = min(answer, abs(firstHalfSum + sumSecondHalf[halfSize - i][left - 1]));
+            }
+        }
+        // Return the minimum difference found.
+        return answer;
+    }
+};
+```
+- [ ] Re-Attempt
