@@ -733,6 +733,8 @@ f(ind,T)
 ```
 for(T: 0 to target)
 {
+	// if index is 0 how can we achieve the target? 
+	// if target is divisible by a[0], just add it's multiple to dp
 	if(T%a[0]==0) dp[0][T]=T/a[0];
 	else dp[0][T]=INT_MAX;
 }
