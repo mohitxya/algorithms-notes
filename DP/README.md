@@ -543,6 +543,10 @@ f(ind,target)
 
 	return dp=pick || notpick
 }
+
+// If you want to count the possible subets.
+// return 1 instead of true.
+// instead of || add '+' them.
 ```
 - Time complexity: $O(2^{n})$
 - Space complexity: $O(n)$
@@ -680,3 +684,71 @@ public:
 };
 ```
 - [ ] Re-Attempt
+#### Count Partitions with difference
+```
+s1-s2=D
+s1+s2=Total
+
+2s1=D+Total
+
+s1=(D+Total)/2
+s2=(Total-D)/2
+
+Find subsets whose total sum is: (Total-D)/2
+
+Total-D>=0
+Total-D has to be even
+```
+- `if(num[0]==0) dp[0][0]=2`, else `dp[0][0]=1`
+- `if(num[0]!=0 && num[0]<=tar) dp[0][num[0]]=1`
+- Rest is same. 
+#### Minimum coins
+- Minimum number of coins to achieve an amount. 
+- Greedy solution doesn't work.
+> infinite supply -> in take index doesn't move.
+- for base case always think about the index 0.
+```
+f(ind,T)
+{
+	if(ind==0)
+	{
+		if(T%arr[0]==0) return T/a[i];
+		else return INT_MAX;
+	}
+	int nottake=0+f(ind-1,T);
+	int take=INT_MAX;
+	if(coins[ind]<=T) take=1+f(ind,T-coins[ind]);
+
+	return min(take,nottake);
+}
+```
+- Time complexity: $O(2^{n})$
+- Space complexity: $O(target)$
+- ![](attachments/Pasted%20image%2020250718123516.png)
+- `Memoization`: over index and target.
+- `dp[N][target+1]`
+- Time complexity: $O(N*T)$
+- Space complexity: $O(N*T)+O(T)$
+- Tabulation:
+```
+for(T: 0 to target)
+{
+	if(T%a[0]==0) dp[0][T]=T/a[0];
+	else dp[0][T]=INT_MAX;
+}
+
+for(int ind=1; ind<n; ind++)
+{
+	for(int T=0 to target)
+	{
+		int nottake=0+dp(ind-1,T);
+		int take=INT_MAX;
+		if(coins[ind]<=T) take=1+dp(ind,T-coins[ind]);
+	
+		dp[ind][T]= min(take,nottake);
+	}
+}
+
+return dp[n-1][target]
+```
+- Then space optimize.
