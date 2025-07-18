@@ -15,7 +15,8 @@
 	 - [Subset Sum](#subset-sum) 
 	 - [Partition Equal Subset Sum](#partition-equal-subset-sum)
 	 - [Minimize Sum Difference](#minimize-sum-difference)
-	 - 
+	 - [Count Partitions with difference](#count-partitions-with-difference)
+	 - [Minimum coins](#minimum-coins)
 
 
 
