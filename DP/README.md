@@ -17,7 +17,8 @@
 	 - [Minimize Sum Difference](#minimize-sum-difference)
 	 - [Count Partitions with difference](#count-partitions-with-difference)
 	 - [Minimum coins](#minimum-coins)
-
+- DP on Strings
+	- placeholder
 
 
 #### Introduction
@@ -755,3 +756,56 @@ for(int ind=1; ind<n; ind++)
 return dp[n-1][target]
 ```
 - Then space optimize.
+#### Unbounded Knapsack
+- `f(n-1,W)`: Maximum value that can be collected starting from index=n-1, with the weight limit being W.
+- When infinite supply stand at the same index. 
+```
+f(ind,W)
+{
+	// base case
+	if(ind==0)
+	{
+		return (W/wt[0])*val[0]
+	}
+	nottake=0+f(ind-1,W)
+	take=INT_MIN
+	if(wt[ind]<=W)
+	{
+		take=val[ind]+f(ind,W-wt[ind])
+	}
+	return max(take,nottake)
+}
+```
+- Tabulation: implemented.
+```
+1. Initialize index=0, with w/wt[0] x val[0].
+2. Two for loops to fill the rest of dp matrix.
+3. return dp[n-1][W]
+```
+
+#### Longest Common Subsequence
+- Brute-force: Generate all subsequences and find the longest one.
+- Use two indexes.   
+```
+f(ind1,ind2)
+{
+	if(ind1<0 || ind2<0) return 0;
+	if(dp!=-1) return dp
+	if(s1[ind1]==s2[ind2])
+	{
+		return 1+f(ind1-1,ind2-1);
+	}
+	return dp=0+max(f(ind1-1,ind2),f(ind1,ind2-1));
+}
+```
+- e.g. `acd`and `ced`
+- Time complexity: $2^{n}*2^{m}$
+- After `Memoization`: Time complexity: $O(N*M)$ and Space complexity: $O(N+M)$
+- Tabulation method:
+```
+1. shifting of index, 1 means 0. 0 means -1.
+2. dp[0][j]=0 and dp[i][0]=0
+3. i: 1 to n and j: 1 to m
+4. Copy the recurrence
+5. space optmization with prev and curr vectors.
+```
