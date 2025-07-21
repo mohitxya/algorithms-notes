@@ -17,7 +17,9 @@
 	 - [Minimize Sum Difference](#minimize-sum-difference)
 	 - [Count Partitions with difference](#count-partitions-with-difference)
 	 - [Minimum coins](#minimum-coins)
+	 - [Unbounded Knapsack](#unbounded-knapsack)
 - DP on Strings
+	- [Longest Common Knapsack](#longest-common-knapsack)
 	- placeholder
 
 
@@ -809,3 +811,54 @@ f(ind1,ind2)
 4. Copy the recurrence
 5. space optmization with prev and curr vectors.
 ```
+- printing the longest common subsequence:
+```
+len=dp[n][m]
+string s=""
+for i 0 to len:
+	s+='$'
+i=n, j=m
+while(i>0 and j>0)
+{
+	if(s1[i-1]==s2[j-1])
+	{
+		s[index]=s1[i-1];
+		index--;
+		i--; j--;
+	}
+	else if(dp[i-1][j]>dp[i][j-1])
+	{
+		i=i-1;
+	}
+	else
+	{
+		j=j-1;
+	}
+}
+```
+
+#### Longest Common Substring
+- substring has to be continuous.
+```cpp
+// modify previous tabulation code.
+for(int j=0: j<=m; j++) dp[0][j]=0;
+foar(int i=0; i<=n; i++) dp[i][0]=0;
+for(int i=1; i<=n; i++)
+{
+	for(int j=1; j<=m; j++)
+	{
+		if(s[i-1]==t[j-1]){
+			dp[i][j]=1+dp[i-1][j-1];
+			//cur[j]
+			ans=max(ans,dp[i][j]);
+			//cur[j]
+		} 
+		else dp[i][j]=0;
+		//cur[j]
+	}
+	// prev=cur;
+}
+
+return ans;
+```
+- Palindromic subsequence: Just reverse the string and find longest subsequence.
