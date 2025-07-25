@@ -25,7 +25,10 @@
 	- [Shortest Common Super sequence](#shortest-common-super-sequence)
 - DP on Stocks
 	 - [Buy and Sell Stock 2](#buy-and-sell-stock-2)
-	 - 
+	 - [Buy and Sell Stock 3](#buy-and-sell-stock-3)
+- DP on LIS
+	- [Longest Increasing Subsequence](#longest-increasing-subsequence)
+	- 
 
 #### Introduction
 - Two way: `Tabulation` and `Memoization`.
@@ -1084,3 +1087,21 @@ public:
 - another option: `dp[Nx4]`
 - use transaction number to determine buy and sell.
 - 4 implies buy, sell, buy, sell.
+
+#### Longest Increasing Subsequence
+- keep track of previously picked element.
+```
+f(ind,prev_ind)
+{
+	if(ind==n) return 0;
+	nottake=0+f(ind+1,prev_ind) //not take
+
+	if(prev==-1 || arr[ind]>arr[prev_ind])
+	{
+		take=1+f(ind+1,ind)
+	}
+	return(take,nottake)
+}
+```
+- Time complexity: $O(2^{n})$
+- Space complexity: $O(N)$
