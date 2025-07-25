@@ -23,7 +23,9 @@
 	- [Longest Common Substring](#longest-common-substring)
 	- [Palindrome](#palindrome)
 	- [Shortest Common Super sequence](#shortest-common-super-sequence)
-
+- DP on Stocks
+	 - [Buy and Sell Stock 2](#buy-and-sell-stock-2)
+	 - 
 
 #### Introduction
 - Two way: `Tabulation` and `Memoization`.
@@ -908,3 +910,177 @@ whiel(j>0){ans+=s2[j-1]; j--;}
 rev(s)
 ```
 #### Distinct Subsequences
+```
+1. express everything in terms of i and j
+2. Explore all possibilities.
+3. Return Summation of all possibilities.
+4. Base case
+```
+- `f(n-1,m-1)`
+- when to return 1? If all characters of s2 match.
+```
+f(i,j)
+{
+	if(j<0) return 1;
+	if(i<0) return 0;
+	if dp!=-1 return dp
+	if(s1[i]==s2[j])
+	{
+		return dp_i_j=f(i-1,j-1)+f(i-1,j)
+	}
+	else
+	{
+		return dp_i_j=f(i-1,j)
+	}
+}
+```
+- Time complexity: exponential
+- Space complexity: $O(N+M)$
+- After `memoization`:
+- Time complexity: $O(N*M)$
+- Space complexity: $O(N*M)+O(N+M)$
+- Tabulation:
+```
+brief algorithm:
+1. Write down the base cases.
+2. two for loops for i and j.
+3. copy the recurrence.
+```
+#### Edit Distance
+- You can: 1. Insert 2. Remove 3. Replace 
+- `f(n-1,m-1)`: convert `s1[0..i]` to `s2[0..j]`
+```
+f(i,j)
+{
+	s1 exhausted? return j+1(length of s2)
+	s2 exhausted? return i+1
+	if(s1[i]==s2[j]) return 0+f(i-1,j-1)
+	else
+	{
+		1+f(i,j-1) //insert
+		1+f(i-1,j) //delete
+		1+f(i-1,j-1) //replace
+		take min of all
+	}
+}
+```
+- Time complexity: Exponential
+- Space complexity: $O(N+M)$
+- After `memoization`:
+- Time complexity: $O(N*M)$
+- Space complexity: $O(N*M)+O(N+M)$
+- tabulation approach: Use 1 based indexing.
+
+#### Wildcard Matching
+- `?` : means a single character.
+- `*` : means any sequence of characters.
+```
+f(i,j)
+{
+	if(i<0 && j<0) return True
+	if(i<0 && j>=0) return False
+	if(j<0 && i>=0)
+	{
+		for(0 to i) if s1[i]!='*' return False
+	}
+	if(s1[i]==s2[j] || s1[i]=='?') return f(i-1,j-1)
+	if(s1[i]=='*') return f(i-1,j) or f(i,j-1) 
+	return False;
+	
+}
+```
+- Time complexity: exponential
+- Space complexity: $O(N+M)$
+- After `memoization`:
+- Time complexity: $O(N*M)$
+- Space complexity: $O(N*M)+O(N+M)$
+- Tabulation:
+```cpp
+dp[0][0]=true;
+for(int j=1;j<=m;j++)
+{
+	dp[0][j]=false;
+}
+
+for(int i=1;i<=n;i++)
+{
+	flag=true;
+	for(int ii=1; ii<=i; i++)
+	{
+		if(pattern[ii=1]!='*')
+		{
+			flag=false;
+			break;
+		}
+	}
+	dp[i][0]=flag;
+}
+
+for(int i=1; i<=n; i++)
+{
+	for(int j=1; j<=m; j++)
+	{
+		//same recurrence
+	}
+}
+```
+#### Buy and Sell Stock 2
+- Buy=1 means you can buy, 0 means you can't.
+```
+f(ind,buy)
+{
+	if(ind==n) return 0
+	if(buy)
+	{
+		profit=max(-prices[ind]+f(ind+1,0), 0+f(ind+1,1))
+	}
+	else
+	{
+		profit=max(prices[ind]+f(ind+1,1),0+f(ind+1,0))
+		return profit
+	}
+}
+```
+- Time complexity: $2^{n}$
+- Space complexity: $O(n)$
+- After `memoization`:
+- Time complexity: $O(N*2)$
+- Space complexity: $O(N*2)+O(N)$
+- Tabulation:
+```cpp
+class Solution {
+
+public:
+    int maxProfit(vector<int>& prices) {
+        int n=prices.size();
+        vector<vector<int>> dp(n+1,vector<int>(2,0));
+        dp[n][0]=dp[n][1]=0;
+       for(int ind=n-1;ind>=0;ind--)
+        {
+            for(int buy=0;buy<=1;buy++)
+            {
+                long profit=0;
+                if(buy)
+                {
+                    profit=max(-prices[ind]+dp[ind+1][0],dp[ind+1][1]);
+                }
+                else
+                {
+                    profit=max(prices[ind]+dp[ind+1][1],dp[ind+1][0]);
+               }
+                dp[ind][buy]=profit;
+            }
+        }
+        return dp[0][1];
+    }
+};
+```
+ - can use `ahead` and `cur` for space optimization.
+#### Buy and Sell Stock 3
+- same as 2 just add an extra parameter called `cap`.
+- After `memoization`:
+- Time complexity: $O(N*2*3)$
+- Space complexity:$O(N*2*3)+O(N)$ (O(N) is auxiliary stack space)
+- another option: `dp[Nx4]`
+- use transaction number to determine buy and sell.
+- 4 implies buy, sell, buy, sell.
