@@ -53,3 +53,93 @@ vector<vector<int>> adj[n+1]
 4: {(2,1),(3,4),(5,3)}
 - second guy is the edge weight.
 ```
+#### Connected Components
+```
+for i to n:
+	if(!vis[i])
+		traversal(i)
+```
+#### BFS Traversal
+- Breadth First Search technique.
+- Next level at equivalent distance, starting from the starting node.
+- Use a Queue DS.
+- Create a visited array. Mark the starting node as 1. 
+- Create an adjacency list.
+```cpp
+vector<int> bfs(int V, vector<int> adj[])
+{
+	int vis[n]={0};
+	vis[0]=1;
+	queue<int> a;
+	q.push(0);
+	vector<int> bfs;
+	while(!q.empty())
+	{
+		int node=q.front();
+		q.pop();
+		bfs.push(node);
+		for(auto it: adj[node])
+		{
+			if(!vis[it])
+			{
+				vis[it]=1;
+				q.push(it);
+			}
+		}
+	}
+	return bfs;
+}
+```
+- Space complexity: $O(3N)$
+- Time complexity: N nodes + total degrees(2E) 
+
+#### DFS Traversal
+- ![](attachments/Pasted%20image%2020250731114201.png)
+- `1-2-5-6-3-7-8-4`
+- Algorithm:
+```
+1. Store the graph in an adjacency list. 
+2. Create a visited array. 
+3. Mark starting node as visited. 
+4. dfs(starting node)
+
+dfs(node)
+{
+	vis[node1]
+	list.add(node)
+	for(auto i: adj[node])
+	{
+		if(!vis[it])
+		{
+			dfs(it)
+		}
+		
+	}
+}
+```
+- 
+```cpp
+void dfs(int node, vector<int> adj[], int vis[], vector<int> &ls)
+{
+	vis[node]=1;
+	ls.push_back(node);
+	for(auto it: adj[node])
+	{
+		if(!vis[it])
+		{
+			dfs(it,adj,vis,ls);
+		}
+	}
+}
+vector<int> dfsOfGraph(int V, vector<int> adj[])
+{
+	int vis[V]={0};
+	int start=0;
+	vector<int> ls;
+	dfs(start, adj, vis, ls);
+	return ls;
+}
+```
+- Space complexity: $O(N)+O(N)+O(N)$
+- n nodes visited + visited nodes + stack space
+- Time complexity: $O(N)+O(2E)$
