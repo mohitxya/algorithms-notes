@@ -143,3 +143,149 @@ vector<int> dfsOfGraph(int V, vector<int> adj[])
 - Space complexity: $O(N)+O(N)+O(N)$
 - n nodes visited + visited nodes + stack space
 - Time complexity: $O(N)+O(2E)$
+
+#### Number of Provinces
+```
+for(i from 1 to V):
+	if(vis[i]==0):
+		cnt++
+		dfs(i)
+```
+- Change adjacency matrix to a list.
+```cpp
+class Solution {
+private:
+
+    void dfs(int node, vector<vector<int>> adj, vector<int> &vis, vector<int> &ls)
+    {
+        vis[node]=1;
+        ls.push_back(node);
+        for(auto it: adj[node])
+        {
+            if(!vis[it])
+            {
+                dfs(it,adj,vis,ls);
+            }
+        }
+    }
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) {
+        int v=isConnected.size();
+        vector<int> vis(v,0);
+        vector<int> ls;
+        vector<vector<int>> adj(v);
+        for(int i=0; i<v; i++)
+        {
+            for(int j=0; j<v; j++)
+            {
+                if(isConnected[i][j]==1 && i!=j)
+                {
+                    adj[j].push_back(i);
+                    adj[i].push_back(j);
+                }
+            }
+        }
+        int cnt=0;
+        for(int i=0; i<v; i++)
+        {
+            if(vis[i]==0)
+            {
+                cnt++;
+                dfs(i,adj,vis,ls);
+            }
+        }  
+        return cnt;
+    }
+};
+```
+- space complexity: visited array + stack space
+- time complexity:$O(N)+O(V+2E)$
+
+#### Rotten Oranges
+- 0 means empty, 1 means fresh, 2 means rotten.
+- We need level wise traversal, BFS.
+- Use a queue structure and maintain a rotten matrix to mark rotten oranges.
+- After each step increase the time period associated with each square.`(x,y,t)`
+```cpp
+int orangesRotting(vector<vector<int>>& grid)
+{
+	int n=grid.size();
+	int m=grid[0].size();
+
+	queue<pair<pair<int,int>,int>> q;
+	vector<vector<vis>> vis;
+	for(int i=0; i<n; i++)
+	{
+		for(int j=0; j<m; j++)
+		{
+			if(grid[i][j]==2)
+			{
+				q.push({{i,j},0});
+				vis[i][j]=2;
+			}
+		}
+	}
+
+	int tm=0;
+	int drow[]={-1,0,+1,0};
+	int dcol[]={0,1,0,-1};
+	while(!q.empty())
+	{
+		int r=q.front().first.first;
+		int c=q.front().first.second;
+		int t=q.front().second;
+		tm=max(tm,t);
+		q.pop();
+		for(int i=0; i<4; i++)
+		{
+			int nrow=r + drow[i];
+			int ncol=c+ dcol[i];
+			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && vis[nrow][ncol]!=2 && grid[nrow][ncol]==1)
+			{
+				q.push({{nrow,ncol},t+1});
+				vis[nrow][ncol]=1;
+			}
+		}
+	}
+
+	for(int i=0; i<n; i++)
+	{
+		for(int j=0; j<m; j++)
+		{
+			if(grid[i][j]!=2 && grid[i][j]==1) return -1;
+		}
+	}
+	
+}
+```
+#### Flood Fill
+- We'll be using DFS.
+```cpp
+private:
+	void dfs(int row, int col, vector<vector<int>>& ans,vector<vector<int>>& image, int newColor,int delRow[],int delCol[])
+	{
+		ans[row][col]=newColor;
+		for(int i=0; i<4; i++)
+		{
+			int nrow=row+delRow[i];
+			int ncol=col+delCol[i]; 
+			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && image[nrow][ncol]==iniColor && ans[nrow][ncol]!=new)
+			{
+				dfs(nrow,ncol,ans,image,newColor,delRow,delCol);
+			}
+		}
+		
+	}
+public:
+vector<vector<int>> floodFill(vector<vector<int>& image, int sr, int sc, int newColor){
+int iniColor=image[sr][sc];
+vector<vector<int>> ans=image;
+int delRow[]={-1,0,+1,0};
+int delCol[]={0,+1,0,-1};
+dfs(sr,sc,ans,image,newColor,delRow, delCol);
+}
+```
+- At worst case N x M nodes.
+- For every node 4 times.
+- Time complexity: $O(N*M)$
+- Space complexity: $O(N*M)+O(N*M)$
