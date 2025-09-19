@@ -289,3 +289,62 @@ dfs(sr,sc,ans,image,newColor,delRow, delCol);
 - For every node 4 times.
 - Time complexity: $O(N*M)$
 - Space complexity: $O(N*M)+O(N*M)$
+#### Cycle Detection in Undirected Graph
+BFS Traversal:
+- For the graph create an adjacency list.
+- **BFS traversal** goes level-wise.
+- Maintain a Q DS and a visited array.
+- Go to the adjacency list and add node to Q along with parent node. 
+- For connected components: We would need to call the function for each component.
+```cpp
+class Solution
+{
+	private: 
+	bool detect(int src, vector<int> adj[], int vis[])
+	{
+		vis[src]=1;
+		queue<pair<int,int>> q;
+		q.push({src,-1});
+		while(!q.empty())
+		{
+			int node=q.front().first;
+			int parent=q.front().second;
+			q.pop();
+			
+			for(auto adjacentNode: adj[node])
+			{
+				if(!vis[adjacentNode])
+				{
+					vis[adjacentNode]=1;
+					q.push({adjacentNode,node});
+				}
+				else if(parent!=adjacentNode)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	public: 
+	bool isCycle(int V, vector<int> adj[])
+	{
+		int vis[V]={0};
+		for(int i=0; i<V; i++)
+		{
+			if(!vis[i])
+			{
+				if(detect(i,adj,vis)) return true;
+			}
+		}
+		return false;
+	}
+}
+```
+- Time complexity: Summation of all adjacent nodes is the summation of all degrees. 
+- $O(N+2E)$ 
+- Space complexity: $O(N)$
+
+DFS Traversal:
+- If we reach any node which has been previously visited we call it a cycle.
+- Initialize a visited array and mark everything as zero apart from the source node. 
