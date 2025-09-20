@@ -53,6 +53,15 @@ vector<vector<int>> adj[n+1]
 4: {(2,1),(3,4),(5,3)}
 - second guy is the edge weight.
 ```
+**Convert to adjacency list**
+```cpp
+vector<vector<int>> adj(V);
+for (auto &e : edges) {
+    int u = e[0], v = e[1];
+    adj[u].push_back(v);
+    adj[v].push_back(u); // undirected
+}
+```
 #### Connected Components
 ```
 for i to n:
@@ -348,3 +357,42 @@ class Solution
 DFS Traversal:
 - If we reach any node which has been previously visited we call it a cycle.
 - Initialize a visited array and mark everything as zero apart from the source node. 
+- Carry the parent as well.
+- Parent will be -1 for the initial node.
+- If you came from 1 and it is visited, we can't count it as a cycle. 
+- If any one function call return `true`, every other call should also return a `true`.
+- Visited and not a parent: Cycle.
+```
+dfs(node, parent)
+{
+	vis[node]=1
+	for(auto it: adj[node])
+	{
+		if(vis[it]==0)
+		{
+			if(dfs(i,node)==true)
+			{
+				return true;
+			}
+		}
+		else if(it!=parent)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+main()
+{
+	for(i: 1 to V)
+	{
+		if(!visited)
+		{
+			dfs(i,-1)
+		}
+	}
+}
+```
+- Space Complexity: $O(N)+O(N= O(N))$ (Recursive stack space + Visited array)
+- Time Complexity: $O(N+2E)+O(N)$ (DFS traversal + for loop)
