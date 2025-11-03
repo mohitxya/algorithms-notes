@@ -396,3 +396,65 @@ main()
 ```
 - Space Complexity: $O(N)+O(N= O(N))$ (Recursive stack space + Visited array)
 - Time Complexity: $O(N+2E)+O(N)$ (DFS traversal + for loop)
+#### 0/1 Matrix
+- We'll use BFS since it goes level wise. 
+- Create a visited matrix and distance matrix. 
+- Create a queue DS: 
+	- Add `(1,1),0`: co-ordinate and distance.
+	- Add `(2,2),0` and so on.
+	- Mark their corresponding visited values as 1. 
+- Update the distance matrix for `(1,1)`.
+- For every queue element traverse in all 4 directions and add the elements with their distances to the queue. 
+- 4 directions: row->`{-1,0,+1,0}`, col->`{0,+1,0,-1}`
+```cpp
+nearest(vector<vector<int>>grid)
+{
+	int n=grid.size();
+	int m=grid[0].size();
+	
+	vector<vector<int>> vis(n,vector<int> (m,0));
+	vector<vector<int>> dist(n,vector<int> (m,0));
+	queue<pair<pair<int,int>,int>> q;
+	for(int i=0; i<n; i++)
+	{
+		for(int j=0; j<m; j++)
+		{
+			if(grid[i][j]==1)
+			{
+				q.push({{i,j},0});
+				vis[i][j]=1;
+			}
+			else
+			{
+				vis[i][j]=0;
+			}
+		}
+	}	
+	int delrow[]={-1,0,+1,0};
+	int delcol[]={0,+1,0,-1};
+	// n x m x4
+	while(!q.empty())
+	{
+		int row=q.front().first.first;
+		int col=q.front().first.second;
+		int steps=q.front().second;
+		q.pop();
+		dist[row][col]=steps;
+		
+		for(int i=0; i<4; i++)
+		{
+			int nrow=row+delrow[i];
+			int ncol=col+delrow[i];
+			
+			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m &&vis[nrow][ncol]==0)
+			{
+				vis[nrow][ncol]=1;
+				q.push({nrow,ncol},steps+1)
+				
+			}
+		}
+	}
+	return dist;
+}
+```
+#### Surrounded Regions
