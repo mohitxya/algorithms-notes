@@ -63,6 +63,8 @@ for (auto &e : edges) {
 }
 ```
 #### Connected Components
+- Graph could contain several components. 
+- Size of visited array should be 1 greater than the number of vertices. 
 ```
 for i to n:
 	if(!vis[i])
@@ -71,22 +73,26 @@ for i to n:
 #### BFS Traversal
 - Breadth First Search technique.
 - Next level at equivalent distance, starting from the starting node.
-- Use a Queue DS.
+- Use a Queue DS. First in First out. 
 - Create a visited array. Mark the starting node as 1. 
-- Create an adjacency list.
+- The queue contains the starting node initially. 
+- Pop the element of the queue and check it's neighbors. 
+- If visited set it as 1. 
 ```cpp
-vector<int> bfs(int V, vector<int> adj[])
+vector<int> bfsOfGraph(int V, vector<int> adj[])
 {
 	int vis[n]={0};
 	vis[0]=1;
-	queue<int> a;
+	queue<int> q;
 	q.push(0);
 	vector<int> bfs;
 	while(!q.empty())
 	{
 		int node=q.front();
 		q.pop();
+		// take out the node. 
 		bfs.push(node);
+		// go through all the neigbours of the selected element. 
 		for(auto it: adj[node])
 		{
 			if(!vis[it])
@@ -114,8 +120,9 @@ vector<int> bfs(int V, vector<int> adj[])
 
 dfs(node)
 {
-	vis[node1]
+	vis[node]=1
 	list.add(node)
+	// Now you're gonna travel the neighbours. 
 	for(auto i: adj[node])
 	{
 		if(!vis[it])
@@ -269,6 +276,8 @@ int orangesRotting(vector<vector<int>>& grid)
 ```
 #### Flood Fill
 - We'll be using DFS.
+- Consider the starting pixel, plus any pixels connected to it of the same color. 
+- Replace the color of all the aforementioned pixels with the `newColor`. 
 ```cpp
 private:
 	void dfs(int row, int col, vector<vector<int>>& ans,vector<vector<int>>& image, int newColor,int delRow[],int delCol[])
@@ -278,7 +287,7 @@ private:
 		{
 			int nrow=row+delRow[i];
 			int ncol=col+delCol[i]; 
-			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && image[nrow][ncol]==iniColor && ans[nrow][ncol]!=new)
+			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && image[nrow][ncol]==iniColor && ans[nrow][ncol]!=newColor)
 			{
 				dfs(nrow,ncol,ans,image,newColor,delRow,delCol);
 			}
@@ -458,3 +467,154 @@ nearest(vector<vector<int>>grid)
 }
 ```
 #### Surrounded Regions
+- Replace all 'O' with 'X' that are surrounded by 'X'. 
+- If 'O' is connected to a boundary, it can't be surrounded. 
+- Algorithm: 
+	- Start from the boundary zeros and mark them. 
+	- Convert the remaining to 'X'.
+```cpp
+class Solution
+{
+private: 
+		void dfs(int row, int col, vector<vector<int>> &vis, vector<vector<char>> &mat, int delrow[], int delcol[])
+	{
+		vis[row][col]=1;
+		int n=mat.size();
+		int m=mat[0].size();
+		// check for top, right, bottom, left. 
+		for(int i=0;j i<4; i++)
+		{
+			int nrow = row + delrow[i];
+			int ncol = col + delcol[i];
+			if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && !vis[nrow][ncol] && mat[nrow][ncol]=='0')
+			{
+				dfs(nrow, col, vis, mat, delrow, delcol);
+			}
+		}
+		
+	}
+public: 
+	vector<vector<char>> fill(int n, int m, vector<vector<char>> mat)
+	{
+		int n=mat.size();
+		int m=mat[0].size();
+		int delrow[]={-1,0,+1,0};
+		int delcol[]={0,1,0,-1};
+		vector<vector<int>> vis(n, vector<int>(m,0));
+		
+		for(int j=0; j<m; j++)
+		{
+			// first row
+			if(!vis[0][j] && mat[0][j]=='O')
+			{
+				dfs(0,j,vis,mat);
+			}
+			// last row
+			if(!vis[n-1][j] && mat[n-1][j]=='O')
+			{
+				dfs(n-1,j,vis,mat);
+			}
+		}
+		
+		for(int i=0; i<n; i++)
+		{
+			// first column
+			if(!vis[i][0] && mat[i][0]=='O')
+			{
+				dfs(i,0,vis,mat);
+			}
+			// last column
+			if(!vis[i][m-1] && mat[i][m-1]=='O')
+			{
+				dfs(i,m-1,vis,mat);
+			}
+		}
+		
+		for(int i=0; i<n; i++)
+		{
+			for(int j=0; j<m; j++)
+			{
+				if(!vis[i][j] && mat[i][j]=='O') mat[i][j]='X';
+			}
+		}
+		
+		return mat;
+		
+	}
+}
+```
+#### Number of Enclaves
+- A move consists of walking from one land cell to another adjacent land cell or walking off the boundary of the grid. 
+- count the number of enclaves (you can't move out from).
+- ![[attachments/Pasted image 20260109101642.png|100]]
+- In the above example there are zero enclaves. 
+- Something connected to boundary 1's will never be the answer. 
+- Approach 1: take boundary 1's and flood fill with 0's. 
+```cpp
+class Solution {
+private:
+    void dfs(int row, int col,vector<vector<int>>& ans,vector<vector<int>>& image, int iniColor, int newColor,int delRow[],int delCol[])
+
+    {
+        ans[row][col]=newColor;
+        int n=image.size();
+        int m=image[0].size();
+        for(int i=0; i<4; i++)
+        {
+            int nrow = row + delRow[i];
+            int ncol = col + delCol[i];
+            if(nrow>=0 && nrow < n && ncol>=0 && ncol<m && image[nrow][ncol]==iniColor && ans[nrow][ncol]!=newColor)
+            {
+                dfs(nrow, ncol, ans, image,iniColor,  newColor, delRow, delCol);
+            }
+        }
+    }
+public:
+    int numEnclaves(vector<vector<int>>& grid) {
+        int n=grid.size();
+        int m=grid[0].size();
+        vector<vector<int>> ans=grid;
+        int delrow[]={-1,0,+1,0};
+        int delcol[]={0,1,0,-1};
+
+        for(int j=0; j<m; j++)
+        {
+            if(grid[0][j]==1)
+            {
+                dfs(0,j,ans,grid,1,0,delrow,delcol);
+            }
+            if(grid[n-1][j]==1)
+            {
+                dfs(n-1,j,ans,grid,1,0,delrow,delcol);
+            }
+        }
+        for(int i=0;i<n; i++)
+        {
+            if(grid[i][0]==1)
+            {
+                dfs(i,0,ans,grid,1,0,delrow,delcol);
+            }
+            if(grid[i][m-1]==1)
+            {
+                dfs(i,m-1,ans,grid,1,0,delrow,delcol);
+            }
+        }
+        int count=0;
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(ans[i][j]==1)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+};
+```
+#### Word Ladder
+- Given two words `beginWord` and `endWord`, and a dictionary `wordList`, return the number of words in the shortest transformation sequence.
+- Every adjacent pair of words differs by a single letter. 
+- `beginWord` doesn't need to be in `wordList`.   
