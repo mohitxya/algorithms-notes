@@ -1,6 +1,25 @@
 ## Table of Contents
 - [Introduction](#introduction)
-
+- [Connected Components](#connected-components)
+- [BFS Traversal](#bfs-traversal)
+- [DFS Traversal](#dfs-traversal)
+- [Number of Provinces](#number-of-provinces)
+- [Rotten Oranges](#rotten-oranges)
+- [Flood Fill](#flood-fill)
+- [Cycle Detection in Undirected Graph](#cycle-detection-in-undirected-graph)
+- [0/1 Matrix](#01-matrix)
+- [Surrounded Regions](#surrounded-regions)
+- [Number of Enclaves](#number-of-enclaves)
+- [Word Ladder I](#word-ladder-i)
+- [Word Ladder II](#word-ladder-ii)
+- [Number of Distinct Islands](#number-of-distinct-islands)
+- [Bipartite Graph](#bipartite-graph)
+- [Course Schedule II](#course-schedule-ii)
+- [Topological Sort](#topological-sort)
+- [Kahn's Algorithm](#kahns-algorithm)
+- [Cycle Detection (BFS)](#cycle-detection-bfs)
+- [Safe States](#safe-states)
+- [Alien Dictionary](#alien-dictionary)
 #### Introduction
 - Directed and Undirected graphs.
 - Circular things: nodes or vertex. Represented by numbers.
@@ -614,7 +633,583 @@ public:
     }
 };
 ```
-#### Word Ladder
+#### Word Ladder I
 - Given two words `beginWord` and `endWord`, and a dictionary `wordList`, return the number of words in the shortest transformation sequence.
 - Every adjacent pair of words differs by a single letter. 
 - `beginWord` doesn't need to be in `wordList`.   
+- Initialize a queue with a pair {`startWord`, 1} representing the word and its current transformation steps. 
+- `wordList` to `unordered_set` for `O(1)` lookups. 
+- Stop at the first appearance of the `endWord`.
+```cpp
+class Solution
+{
+public:
+	int wordLadderLength(string startWord, string targetWord, vector<string> &wordList)
+	{
+		queue<pair<string, int>> q;
+		q.push({startWord, 1});
+		
+		unordered_set<string> st(wordList.begin(), wordList.end());
+		st.erase(startWord);
+		
+		while(!q.empty()){
+			string word = q.front().first;
+			int steps = q.front().second; 
+			q.pop();
+			
+			if (word==targetWord) return steps; 
+			
+			for(int i=0; i<word.size(); i++)
+			{
+				char original = word[i];
+				for(char ch='a'; ch<='z'; ch++)
+				{
+					word[i]=ch;
+					if(st.find(word)!=st.end())
+					{
+						st.erase(word);
+						q.push({word,steps+1});
+					}
+				}
+				word[i]=original;
+				// revert back the character we changed. 
+			}
+		}
+		return 0;
+	}
+}
+```
+#### Word Ladder II
+- Don't erase when you're working on the same level.
+- In the queue store complete lists. 
+```cpp
+class Solution
+{
+public: 
+	vector<vector<string>> findSequences(string beginWord, string endWord, vector<string> &wordList)
+	{
+		unordered_set<string> st(wordList.begin(), wordList.end());
+		
+		queue<vector<string>> q;
+		q.push({beginWord});
+		
+		// vector defined to store words being used currently. 
+		vector<string> usedOnLevel;
+		usedOnLevel.push_back(beginWord);
+		int level = 0;
+		vector<vector<string>> ans;
+		while(!q.empty())
+		{
+			vector<string> vec = q.front();
+			q.pop();
+			if(vec.size() > level)
+			{
+				level++;
+				for(auto it: usedOnLevel)
+				{
+					st.erase(it);
+				}
+				usedOnLevel.clear();
+			}
+			string word = vec.back();
+			if(word == endWord)
+			{
+				if(ans.size()==0)
+				{
+					ans.push_back(vec);
+				}
+				else if(ans[0].size()== vec.size())
+				{
+					ans.push_back(vec);
+				}
+			}
+			for(int i=0; i<word.size(); i++)
+			{
+				char original = word[i];
+				for(char c='a'; c<='z';c++)
+				{
+					word[i]=c;
+					if(st.count(word)>0)
+					{
+						vec.push_back(word);
+						q.push_back(vec);
+						usedOnLevel.push_back(word);  
+						vec.pop_back();
+					}
+				}
+				word[i]=original;
+			}
+		}
+		return ans;
+	}
+}
+```
+- Optimized approach for Leetcode.
+	- Add words to queue. 
+	- Remove from queue and add to map along with the level.
+	- Backtrack in the map from end to beginning.
+	- This saves the time.
+```cpp
+class Solution
+{
+	unordered_map<string, int> mpp;
+	vector<vector<string>> ans;
+private:
+	void dfs(string word, vector<string> &seq)
+	{
+		if(word==b)
+		{
+			reverse(seq.begin(), seq.end());
+			ans.push_back(seq);
+			reverse(seq.begin(), seq.end());
+			return;
+		}
+		int steps=mpp[word];
+		for(int i=0; i<sz; i++)
+		{
+			char original = word[i];
+			for(char ch='a'; ch<='z'; ch++)
+			{
+				word[i]=ch;
+				if(mpp.find(word)!= mpp.end() && mpp[word]+1 == steps)
+				{
+					seq.push_back(word);
+					dfs(word, seq);
+					seq.pop_back();
+				}
+			}
+			word[i]=original;
+		}
+	}
+public:
+	vector<vector<string>> findLadders(string beginWord, string endWord, vector<string> &wordList)
+	{ 
+		unordered_set<string> st(wordList.begin(), wordList.end());
+		queue<string> q;
+		b=beginWord;
+		q.push({beginWord});
+		mpp[beginWord]=1;
+		int size=beginWord.size();
+		st.erase(beginWord);
+		while(!q.empty())
+		{
+			string word=q.front();
+			int steps = mpp[word];
+			q.pop();
+			if(word == endWord)
+			{
+				break;
+			}
+			for(int i=0; i<sz; i++)
+			{
+				char original=word[i];
+				for(char ch='a'; ch<='z'; ch++)
+				{
+					word[i]=ch;
+					if(st.count(word))
+					{
+						q.push(word);
+						st.erase(word);
+						mpp[word]= steps + 1;
+					}
+				}
+				word[i]=original;
+			}
+		}
+		if(mpp.find(endWord) != mpp.end())
+		{
+			vector<string> seq;
+			seq.push_back(endWord);
+			dfs(endWord, seq);
+		}
+		return ans;
+	}
+}
+```
+#### Number of Distinct Islands
+- Find distinct islands. 
+- create an array for directions: Left, Right, Down, Up. 
+- Also, count the 'B' backtracking step to distinguish between similar. 
+```cpp
+class Solution {
+private:
+    void dfs(int row, int col, vector<vector<int>> &grid, vector<vector<int>> &vis, int delrow[], int delcol[],char dir[], string &path)
+    {
+        vis[row][col]=1;
+        int n=grid.size();
+        int m=grid[0].size();
+        for(int i=0; i<4; i++)
+        {
+            int nrow=row+delrow[i];
+            int ncol=col+delcol[i];
+            if(nrow>=0 && nrow < n && ncol>=0 && ncol<m && vis[nrow][ncol]!=1 && grid[nrow][ncol]==1){
+                path.push_back(dir[i]);   
+                dfs(nrow, ncol, grid, vis, delrow, delcol, dir, path);
+                path.push_back('B');      
+            }
+        }
+    }
+  public:
+    int countDistinctIslands(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        vector<vector<int>> vis(n, vector<int>(m, 0));
+        set<string> st;
+
+        int delrow[] = {0, 0, 1, -1};  
+        int delcol[] = {-1, 1, 0, 0};
+        char dir[]   = {'L','R','D','U'};
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++)
+            {
+                if(!vis[i][j] && grid[i][j] == 1)
+                {
+                    string path = "S"; 
+                    dfs(i, j, grid, vis, delrow, delcol, dir, path);
+                    st.insert(path);
+                }
+            }
+        }
+        return st.size();
+        
+    }
+};
+```
+#### Bipartite Graph
+- Any graph containing odd length cycle can't be bipartite. 
+- We use DFS. 
+- We take a colour array. 
+- No adjacent nodes should have same colour. 
+```cpp
+class Solution {
+private:
+    bool dfs(int node, int col, vector<int>& color, vector<vector<int>>& adj) {
+        color[node] = col;
+
+        for (auto it : adj[node]) {
+            if (color[it] == -1) {
+                // uncolored → color with opposite color
+                if (!dfs(it, !col, color, adj)) 
+                    return false;
+            }
+            else if (color[it] == col) {
+                // same color on adjacent nodes → not bipartite
+                return false;
+            }
+        }
+        return true;
+    }
+
+public:
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<int> color(n, -1);
+
+        // handle disconnected graph
+        for (int i = 0; i < n; i++) {
+            if (color[i] == -1) {
+                if (!dfs(i, 0, color, graph))
+                    return false;
+            }
+        }
+        return true;
+    }
+};
+
+```
+#### Course Schedule II
+- Return ordering of courses you should take to finish all courses. 
+- If many valid answers, return any of them. 
+- In a directed graph, our old cycle check algorithm will fail. 
+- On the same path the node has to be visited again. 
+- visited array, path visited array. 
+- both visited and path visited should be 1 for cycle. 
+- Loop detection in a directed graph: 
+```cpp
+class Solution
+{
+private:
+bool dfsCheck(int node, vector<int> adj[], int vis[], int pathVis[])
+{
+	vis[node]=1;
+	pathVis[node]=1;
+	// traverse for adjacent nodes
+	for(auto it: adj[node])
+	{
+		if(!vis[it])
+		{
+			if(dfsCheck(it, adj, vis, pathVis)==true) return true;
+		}
+		else if(pathVis[it])
+		{
+			return true; 
+		}
+	}
+	pathVis[node]=0;
+	return false;
+}
+public:
+bool isCyclic(int V, vector<int> adj[])
+{
+	int vis[V]={0};
+	int pathVis[V]={0};
+	
+	for(int i=0; i<V; i++)
+	{
+		if(!vis[i])
+		{
+			if(dfsCheck(i, adj, vis, pathVis)==true) return true;
+		}
+	}
+	return false;
+}
+}
+```
+- Leetcode problem solution: 
+```cpp
+class Solution {
+private:
+    bool dfsCheck(int node, vector<vector<int>> &adj,
+                  vector<int> &vis, vector<int> &pathVis,
+                  vector<int> &topo)
+    {
+        vis[node] = 1;
+        pathVis[node] = 1;
+
+        for (auto it : adj[node])
+        {
+            if (!vis[it])
+            {
+                if (dfsCheck(it, adj, vis, pathVis, topo))
+                // if in future it ends up becoming true. 
+                    return true;
+            }
+            else if (pathVis[it])
+            {
+                return true; // cycle detected
+            }
+        }
+
+        pathVis[node] = 0;
+        topo.push_back(node); // backtracking
+        return false;
+    }
+
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites)
+    {
+        vector<vector<int>> adj(numCourses);
+
+        for (auto it : prerequisites)
+        {
+            int course = it[0];
+            int prereq = it[1];
+            adj[prereq].push_back(course);
+        }
+
+        vector<int> vis(numCourses, 0);
+        vector<int> pathVis(numCourses, 0);
+        vector<int> topo;
+
+        for (int i = 0; i < numCourses; i++)
+        {
+            if (!vis[i])
+            {
+                if (dfsCheck(i, adj, vis, pathVis, topo))
+                    return {}; // cycle found
+            }
+        }
+        reverse(topo.begin(), topo.end());
+        return topo;
+    }
+};
+```
+- If a cycle is found it is not possible to complete all the courses. 
+#### Topological Sort
+- Only works on Directed Acyclic graph. 
+- Linear ordering where for every directed edge from vertex u to v, u always comes before v in the list, showing dependency. 
+- Declare a visited array and a stack.
+```cpp
+class Solution
+{
+	private:
+	void dfs(int node, int vis[], stack<int> &st, vector<int> adj[])
+	{
+		vis[node]=1;
+		for(auto it: adj[node])
+		{
+			if(!vis[it]) dfs(it, vis, st, adj);
+		}
+		st.push(node);
+	}
+	public: 
+	vector<int> topoSort(int V, vector<int> adj[])
+	{
+		int vis[V]={0};
+		stack<int> st;
+		for(int i=0; i<V; i++)
+		{
+			if(!vis[i]){
+				dfs(i,vis,st);
+			}
+		}
+		vector<int> ans;
+		while(!st.empty())
+		{
+			ans.push_back(st.top());
+			st.pop()
+		}
+		return ans;
+	}
+}
+```
+#### Kahn's Algorithm
+- Indegree: Number of incoming edges to a node. 
+- If indegree 0, can be placed at the starting. 
+- Add them to a queue. 
+- Take elements from queue and remove edges. Basically, reduce indegree of adjacent nodes. 
+- Check for indegree 0 after this step. 
+```cpp
+class Solution
+{
+	public:
+	vector<int> topoSort(int V, vector<int> adj[])
+	{
+		int indegree[V] = {0};
+		for(int i=0; i<V; i++)
+		{
+			 for(auto it: adj[i])
+			 {
+				 indegree[it]++;
+			 }
+		}
+		
+		queue<int> q;
+		for(int i=0; i<V; i++)
+		{
+			if(indegree[i]==0)
+			{
+				q.push(i);
+			}
+		}
+		
+		vector<int> topo;
+		while(!q.empty())
+		{
+			int node = q.front();
+			q.pop();
+			topo.push_back(node);
+			// remove node from indegree
+			for(auto it: adj[node])
+			{
+				indegree[it]--;
+				if(indegree[it]==0) q.push(it);
+			}
+			
+		}
+		
+		return topo;
+	}
+}
+```
+#### Cycle Detection BFS
+ - Create a queue data structure. 
+ - If topo sort contains N elements then it's a DAG. 
+ - Otherwise it contains a cycle. 
+ ```cpp
+ class Solution
+{
+	public:
+	vector<int> topoSort(int V, vector<int> adj[])
+	{
+		int indegree[V] = {0};
+		for(int i=0; i<V; i++)
+		{
+			 for(auto it: adj[i])
+			 {
+				 indegree[it]++;
+			 }
+		}
+		
+		queue<int> q;
+		for(int i=0; i<V; i++)
+		{
+			if(indegree[i]==0)
+			{
+				q.push(i);
+			}
+		}
+		
+		int cnt=0;
+		while(!q.empty())
+		{
+			int node = q.front();
+			q.pop();
+			cnt++;
+			// remove node from indegree
+			for(auto it: adj[node])
+			{
+				indegree[it]--;
+				if(indegree[it]==0) q.push(it);
+			}
+			
+		}
+		
+		if(cnt==N) return false;
+		return true;
+	}
+};
+ ```
+- Can use this to solve "Course Schedule I & II" problem. 
+#### Safe States
+- Topological sort works on indegree logic. 
+- But terminal nodes are detected using outdegree. 
+- So we reverse all the edges in the graph.
+- Just do reverse process then sort the safe nodes list. 
+```cpp
+class Solution
+{
+public: 
+	vector<int> eventualSafeNodes(int V, vector<int> adj[])
+	{
+		vector<int> adjRev[V]; 
+		vector<vector<int>> adjRev(V);
+		for(int i=0; i<V; i++)
+		{
+			// i--> it
+			// it--> i
+			for(auto it: adj[i])
+			{
+				adj[it].push_back(i);
+				indegree[i]++;
+			}
+		}
+		queue<int> q;
+		vector<int> safeNodes;
+		for(int i=0; i<V; i++)
+		{
+			if(indegree[i]==0)
+			{
+				q.push(i);
+			}
+		}
+		while(!q.empty())
+		{
+			int node = q.front();
+			q.pop();
+			safeNodes.push_back(node); 
+			for(auto it: adjRev[node])
+			{
+				indegree[it]--;
+				if(indegree[it]==0) q.push(it);
+			}
+		}
+		sort(safeNodes.begin(), safeNodes.end());
+		return safeNodes;
+	}
+}
+```
+#### Alien Dictionary
