@@ -1213,3 +1213,175 @@ public:
 }
 ```
 #### Alien Dictionary
+- We are given a vector of strings sorted in lexicographically correct order. 
+-  return a string containing unique characters sorted in lexicographical order. 
+- Apply topological sort. 
+- Algorithm:
+	- Adjacency list, indegree array and a queue. 
+	- loop through all words and compare adjacent pairs. 
+```cpp
+class Solution{
+private:
+	vector<int> topoSort(int V, vector<int> adj[])
+	{
+		int indegree[V] = {0};
+		for(int i=0; i<V; i++)
+		{
+			 for(auto it: adj[i])
+			 {
+				 indegree[it]++;
+			 }
+		}
+		
+		queue<int> q;
+		for(int i=0; i<V; i++)
+		{
+			if(indegree[i]==0)
+			{
+				q.push(i);
+			}
+		}
+		
+		vector<int> topo;
+		while(!q.empty())
+		{
+			int node = q.front();
+			q.pop();
+			topo.push_back(node);
+			// remove node from indegree
+			for(auto it: adj[node])
+			{
+				indegree[it]--;
+				if(indegree[it]==0) q.push(it);
+			}
+			
+		}
+		
+		return topo;
+	}
+public:
+	string findOrder(string dict[], int N, int K)
+	{
+		 // Step 1: Collect unique characters
+        set<char> unique;
+        for (auto &word : words)
+            for (char c : word)
+                unique.insert(c);
+
+        // Step 2: Map characters to indices
+        unordered_map<char, int> mp;
+        int idx = 0;
+        for (char c : unique)
+            mp[c] = idx++;
+
+        int k = unique.size();
+        int n = words.size();
+
+        // Step 3: Build adjacency list
+        vector<vector<int>> adj(k);
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            string s1 = words[i];
+            string s2 = words[i + 1];
+            int len = min(s1.size(), s2.size());
+
+            bool found = false;
+            for (int j = 0; j < len; j++)
+            {
+                if (s1[j] != s2[j])
+                {
+                    adj[mp[s1[j]]].push_back(mp[s2[j]]);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Invalid case: prefix problem
+            if (!found && s1.size() > s2.size())
+                return "";
+        }
+
+        // Step 4: Topological Sort
+        vector<int> topo = topoSort(k, adj);
+
+        // Step 5: Cycle detection
+        if (topo.size() != k)
+            return "";
+
+        // Step 6: Convert indices back to characters
+        vector<char> rev(k);
+        for (auto &p : mp)
+            rev[p.second] = p.first;
+
+        string ans = "";
+        for (int node : topo)
+            ans += rev[node];
+
+        return ans;
+	}
+}
+```
+#### Shortest Path in Undirected Graph 
+- BFS algorithm. 
+- Start with a queue data structure.  
+- populate distance array with N infinities. 
+- In queue: {node, distance}.
+- If any node was unreachable `distance[node]` would be infinity.
+```cpp
+class Solution{
+public:
+	vector<int> shortestPath(vector<vector<int>> &edges, int N, int M, int src)
+	{
+		vector<int> adj(N);
+		for(auto it: edges)
+		{
+			adj[it[0]].push_back(it[1]);
+			adj[it[1]].push_back(it[0]);
+		}
+		
+		int dist[N];
+		for(int i=0; i<N; i++)
+		{
+			dist[i]=1e9;
+		}
+		dist[src]=0;
+		
+		queue<int> q;
+		q.push(src);
+		while(!q.empty())
+		{
+			int node = q.front();
+			q.pop();
+			for(auto it: adj[node])
+			{
+				if(dist[node]+1 < dist[it])
+				{
+					dist[it] = 1 + dist[node];
+					q.push(it);
+				}
+			}
+		}
+		vector<int> ans(N, -1);
+		for(int i=0; i<M; i++)
+		{
+			if(dist[i]!=1e9)
+			{
+				ans[i]=dist[i];
+			}
+		}
+		return ans;
+	}
+}
+```
+- Time complexity roughly $O(V+2E)$. 
+#### Shortest Path in DAG
+- Adjacency list stores pairs (adjacent node and weight of that edge). 
+- Algorithm: 
+	- Do a topo sort. 
+	- DFS method: stack and visited array. 
+	- DFS call over -> put it in the stack.
+	- Take the nodes out of the stack and relax the edges. 
+	- Declare a distance array and mark everything as infinity. 
+	- take elements from stack, check corresponding weight and update the distance array. 
+	- continue from here: 
