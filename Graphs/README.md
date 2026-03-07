@@ -1382,6 +1382,108 @@ public:
 	- DFS method: stack and visited array. 
 	- DFS call over -> put it in the stack.
 	- Take the nodes out of the stack and relax the edges. 
-	- Declare a distance array and mark everything as infinity. 
-	- take elements from stack, check corresponding weight and update the distance array. 
-	- continue from here: 
+	- Declare a distance array and mark everything as infinity. Mark source node as 0. 
+	- take elements from stack, check adjacent nodes, check corresponding weight and update the distance array. 
+```cpp
+class Solution{
+	private: 
+		void topoSort(int node, vector<pair<int,int>> adj[],
+		int vis[], stack<int> &st)
+		{
+			vis[node]=1; 
+			for(auto it: adj[node])
+			{
+				int v = it.first; 
+				if(!vis[v]){
+					topoSort(v, adj, vis, st);
+				}
+			}
+			
+			st.push(node);
+		}
+	public: 
+		vector<int> shortestPath(int N, int M, vector<int> edges[])
+		{
+			vector<pair<int, int>> adj[N];
+			for(int i=0; i<M; i++)
+			{
+				int u=edges[i][0];
+				int v=edges[i][1];
+				int wt=edges[i][2]
+				adj[u].push_back({v,wt});
+			}
+			// find the topo sort
+			int vis[N]={0};
+			stack<int> st;
+			for(int i=0; i<N; i++)
+			{
+				if(!vis[i])
+				{
+					topoSort(i, adj, vis, st);
+				}
+			}
+			// do the distance thing
+			vector<int> dist(N);
+			for(int i=0; i<N; i++) dist[i]=INT_MAX;
+			dist[0]=0; 
+			while(!st.empty())
+			{
+				int node=st.top(); 
+				st.pop();
+				
+				for(auto it: adj[node])
+				{
+					int v = it.first; 
+					int wt= it.second; 
+					
+					if(dist[node]+wt < dist[v])
+					{
+						dist[v]=dist[node]+wt;
+					}
+				}
+			}
+			return dist; 
+		}
+}
+```
+#### Dijsktra's Algorithm
+>Pronounced `"dike.struh"`
+- Can be implemented using either priority queues or set. 
+- **Priority queue** called "min heap" and a distance array. 
+- You also have an adjacency list. 
+```cpp
+class Solution
+{
+	public: 
+	vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+	{
+		priority_queue<pair<int, int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+		// declare a minimum-heap. 
+		vector<int> dist(V);
+		for(int i=0;j i<V; i++) dist[i]=1e9; 
+		dist[S]=0; 
+		pq.push({0,S});
+		
+		while(!pq.empty())
+		{
+			int dis=pq.top().first;
+			int node=pq.top().second; 
+			pq.pop();
+			
+			for(auto it: adj[node])
+			{
+				int edgeWeight = it[1];
+				int adjNode = it[0];
+				
+				if(dis + edgeWeight < dist[adjNode])
+				{
+					dist[adjNode]=dis + edgeWeight; 
+					pq.push({dist[adjNode], adjNode});
+				}
+			}
+		}
+		return dist; 
+	}
+}
+```
+- Dijkstra doesn't work with negative weight. 
