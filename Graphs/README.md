@@ -1448,6 +1448,7 @@ class Solution{
 ```
 #### Dijsktra's Algorithm
 >Pronounced `"dike.struh"`
+- **Using priority queue:** 
 - Can be implemented using either priority queues or set. 
 - **Priority queue** called "min heap" and a distance array. 
 - You also have an adjacency list. 
@@ -1487,3 +1488,66 @@ class Solution
 }
 ```
 - Dijkstra doesn't work with negative weight. 
+- Time complexity: $E*log(V)$
+- E: Total number of edges, V: total number of nodes. 
+- **Using Set:** 
+- Erase pair from set if you find a better distance. 
+- Remaining sets are same. 
+```cpp
+class Solution
+{
+	public: 
+	vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+	{
+		set<pair<int,int>> st;
+		vector<int> dist(V, 1e9); 
+		
+		st.insert({0,S}); 
+		dist[S] = 0; 
+		
+		while(!st.empty())
+		{
+			auto it = *(st.begin()); 
+			int node = it.second; 
+			int dis = it.first; 
+			st.erase(it); 
+			
+			for(auto it: adj[node])
+			{
+				int adjNode = it[0]; 
+				int edgW = it[1]; 
+				
+				if(dis + edgW < dist[adjNode])
+				{
+					//erase if it existed
+					if(dist[adjNode]!=1e9)
+						st.erase({dist[adjNode], adjNode}); 
+					dist[adjNode] = dis + edgW; 
+					st.insert({dist[adjNode], adjNode});
+				}
+			}
+		}
+		return dist; 
+	}
+}
+```
+- Why use priority queue over a normal queue? 
+	- If we add (7,3) then (3,3) to our priority queue. 
+	- (7,3) would not even be considered. 
+	- Thus, saving computation and time. 
+- $E*log(V)$ : Derivation
+	- E: Total number of edges, V: total number of nodes. 
+	- Worst case: Each node connected to every other. 
+	- Heap size is $V^{2}$.
+	- $V^{2}$ is roughly equal to $E=(V)(V-1)$.
+	- $O\left(V \times \left(\log(\text{heap size}) + ne \times \log(\text{heap size})\right)\right)$
+	- $O\left(V \times \left(\log(\text{heap size}) \times (ne + 1)\right)\right)$
+	- $ne \le V - 1$
+	- $O\left(V \times V \times \log(\text{heap size})\right)$
+	- $O\left(V^2 \log(\text{heap size})\right)$
+	- $\text{heap size} \approx V^2$
+	- $O\left(V^2 \log(V^2)\right)$
+	- $\log(V^2) = 2\log V$
+	- $O\left(V^2 \times 2\log V\right)$
+	- $E = V^2$
+	- $O(E \log V)$
