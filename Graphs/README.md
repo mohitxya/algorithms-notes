@@ -1323,7 +1323,7 @@ public:
 }
 ```
 #### Shortest Path in Undirected Graph 
-- BFS algorithm. 
+- **BFS algorithm.** 
 - Start with a queue data structure.  
 - populate distance array with N infinities. 
 - In queue: {node, distance}.
@@ -1551,3 +1551,66 @@ class Solution
 	- $O\left(V^2 \times 2\log V\right)$
 	- $E = V^2$
 	- $O(E \log V)$
+#### Print Shortest Path
+- Shortest path in weighted undirected graph. 
+- priority queue, distance array and memoization array called "parent".
+- Add your starting node and distance to your priority queue. 
+- In parent store where you came to the node from. 
+- Now trace the parent list back to origin. 
+```cpp
+class Solution
+{
+	public: 
+		vector<int> shortestPath(int n, int m, vector<vector<int>> &edges)
+		{
+			vector<pair<int,int>> adj[n+1]; 
+			for(auto it: edges)
+			{
+				adj[it[0]].push_back({it[1], it[2]});
+				adj[it[1]].push_back({it[0], it[2]});
+			}
+			priority_queue<pair<int,int>, 
+			vector<pair<int,int>>, greater<pair<int,int>>> pq;
+			vector<int> dist(n+1, 1e9), parent(n+1);
+			for(int i=1; i<=n; i++) parent[i]=i;
+			dist[1]=0; 
+			while(!pq.empty())
+			{
+				auto it=pq.top(); 
+				int node = it.second; 
+				int dis = it.first; 
+				pq.pop(); 
+				
+				for(auto it: adj[node])
+				{
+					int adjNode = it.first; 
+					int edW = it.second; 
+					if(dis + edW < dist[adjNode])
+					{
+						dist[adjNode]=dis+edW; 
+						pq.push({dist+edW, adjNode}); 
+						parent[adjNode]=node; 
+					}
+				}
+			}
+			if(dist[n]==1e9) return {-1}; 
+			
+			vector<int> path; 
+			int node = n; 
+			while(parent[node]!=node)
+			{
+				path.push_back(node); 
+				node = parent[node]; 
+			} 
+			path.push_back(1); 
+			reverse(path.begin(), path.end()); 
+			return path; 
+		}
+}
+```
+- Time complexity: $O(E*log(V))+O(n)$
+#### Shortest Distance in a Binary Maze
+- clear path: top-left cell to bottom-right such that all visited cells of the path are `0`. 
+- We do not need a priority queue since the distances increase uniformly. 
+- ![[attachments/Pasted image 20260309225031.png|200]]
+- 
