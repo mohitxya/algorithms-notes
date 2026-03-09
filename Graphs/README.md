@@ -1612,5 +1612,5 @@ class Solution
 #### Shortest Distance in a Binary Maze
 - clear path: top-left cell to bottom-right such that all visited cells of the path are `0`. 
 - We do not need a priority queue since the distances increase uniformly. 
-- ![[attachments/Pasted image 20260309225031.png]]
+- `(row,col)`: +1 and -1 from top/bottom and left/right. 
 - 
