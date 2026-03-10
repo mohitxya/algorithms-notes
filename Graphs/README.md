@@ -1696,3 +1696,4 @@ public:
 };
 ```
 #### Path With Minimum Effort
+- Route's effort is the maximum absolute difference in heights between two consecutive cells of the route. 
