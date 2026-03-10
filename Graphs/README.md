@@ -20,6 +20,13 @@
 - [Cycle Detection (BFS)](#cycle-detection-bfs)
 - [Safe States](#safe-states)
 - [Alien Dictionary](#alien-dictionary)
+- [Shortest Path in Undirected Graph](#shortest-path-in-undirected-graph)  
+- [Shortest Path in DAG](#shortest-path-in-dag)   
+- [Dijkstra's Algorithm](#dijkstras-algorithm)  
+- [Print Shortest Path](#print-shortest-path)   
+- [Shortest Distance in a Binary Maze](#shortest-distance-in-a-binary-maze)   
+- [Shortest Path in Binary Matrix](#shortest-path-in-binary-matrix)    
+- [Path With Minimum Effort](#path-with-minimum-effort)
 #### Introduction
 - Directed and Undirected graphs.
 - Circular things: nodes or vertex. Represented by numbers.
