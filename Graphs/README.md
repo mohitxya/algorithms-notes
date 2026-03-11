@@ -27,6 +27,7 @@
 - [Shortest Distance in a Binary Maze](#shortest-distance-in-a-binary-maze)   
 - [Shortest Path in Binary Matrix](#shortest-path-in-binary-matrix)    
 - [Path With Minimum Effort](#path-with-minimum-effort)
+- [Cheapest flight within K stops](#cheapest-flight-within-k-stops)
 #### Introduction
 - Directed and Undirected graphs.
 - Circular things: nodes or vertex. Represented by numbers.
@@ -1455,7 +1456,8 @@ class Solution{
 ```
 #### Dijsktra's Algorithm
 >Pronounced `"dike.struh"`
-- **Using priority queue:** 
+
+**Using priority queue:** 
 - Can be implemented using either priority queues or set. 
 - **Priority queue** called "min heap" and a distance array. 
 - You also have an adjacency list. 
@@ -1497,7 +1499,7 @@ class Solution
 - Dijkstra doesn't work with negative weight. 
 - Time complexity: $E*log(V)$
 - E: Total number of edges, V: total number of nodes. 
-- **Using Set:** 
+**Using Set:** 
 - Erase pair from set if you find a better distance. 
 - Remaining sets are same. 
 ```cpp
@@ -1696,4 +1698,187 @@ public:
 };
 ```
 #### Path With Minimum Effort
-- Route's effort is the maximum absolute difference in heights between two consecutive cells of the route. 
+- Route's **effort** is the maximum absolute difference in heights between two consecutive cells of the route. 
+- Find effort in all the paths and return the minimum. 
+- We'll take a priority queue.   
+```cpp
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+
+        int n = heights.size();
+        int m = heights[0].size();
+
+        priority_queue<
+            pair<int,pair<int,int>>,
+            vector<pair<int,pair<int,int>>>,
+            greater<pair<int,pair<int,int>>>
+        > pq;
+		//priority_queue<Type, Container, Comparator>
+        vector<vector<int>> dist(n, vector<int>(m, 1e9));
+
+        dist[0][0] = 0;
+        pq.push({0,{0,0}});
+
+        int dr[] = {-1,0,1,0};
+        int dc[] = {0,1,0,-1};
+
+        while(!pq.empty()) {
+
+            auto it = pq.top();
+            pq.pop();
+
+            int diff = it.first;
+            int row = it.second.first;
+            int col = it.second.second;
+
+            if(row == n-1 && col == m-1)
+                return diff;
+
+            for(int i=0;i<4;i++) {
+
+                int newr = row + dr[i];
+                int newc = col + dc[i];
+
+                if(newr>=0 && newc>=0 && newr<n && newc<m) {
+
+                    int newEffort = max(
+                        abs(heights[row][col] - heights[newr][newc]),
+                        diff
+                    );
+
+                    if(newEffort < dist[newr][newc]) {
+
+                        dist[newr][newc] = newEffort;
+                        pq.push({newEffort,{newr,newc}});
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+};
+```
+- Time complexity: $E*log(V)$
+- Actual time complexity: $n*m*4*log(n*m)$
+#### Cheapest flight within k stops
+- Return the cheapest price from `src` to `dst` with at most `k` stops. 
+- If no such route return -1. 
+- This is like a weighted DAG. 
+```cpp
+class Solution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+
+        vector<pair<int,int>> adj[n];
+
+        for(auto &f : flights)
+        {
+            int u = f[0];
+            int v = f[1];
+            int price = f[2];
+
+            adj[u].push_back({v, price});
+        }
+
+        // {cost, {node, stops}}
+        priority_queue<
+            pair<int,pair<int,int>>,
+            vector<pair<int,pair<int,int>>>,
+            greater<pair<int,pair<int,int>>>
+        > pq;
+		// sets up the minHeap structure. 
+		
+        vector<int> stops(n, 1e9);
+        pq.push({0,{src,0}});
+
+        while(!pq.empty())
+        {
+            auto it = pq.top();
+            pq.pop();
+
+            int cost = it.first;
+            int node = it.second.first;
+            int step = it.second.second;
+
+            if(node == dst)
+                return cost;
+
+            if(step > k || step > stops[node])
+			    continue; 
+			// avoids a path if steps greater than k
+			// avoids revisiting same node with a worse number of stops. 
+            stops[node] = step;
+
+            for(auto &nbr : adj[node])
+            {
+                int next = nbr.first;
+                int price = nbr.second;
+
+                pq.push({cost + price, {next, step + 1}});
+            }
+        }
+
+        return -1;
+    }
+};
+```
+#### Network Delay Time
+#### Number of Ways to Arrive at Destination
+#### Minimum Multiplications
+#### Bellman Ford Algorithm
+- Shortest path from a node to all the other nodes. 
+- Works with negative cycles and weights as well. 
+- In negative cycles, Dijkstra would fall into TLE loop. 
+- Applicable for directed graphs. 
+- So, `1->2` should be changed to  `1->2` and `2->1`. 
+- In every iteration you go across all the edges.  
+- We have `n-1` iterations. 
+- Why `n-1` iterations? 
+	- In worst case, every consecutive iteration gives us one more distance array element.  
+- Does negative cycle exist? 
+	- On Nth iteration, the relaxation will be done, but if the distance array still gets reduced we know that a negative cycle exists. 
+```cpp
+class Solution
+{
+	public: 
+		vector<int> bellman_ford(int V, vector<vector<int>> &edges, int S)
+		{
+			vector<int> dist(V,1e8);
+			dist[S]=0; 
+			// V x E 
+			for(int i=0; i<V; i++)
+			{
+				for(auto it: edges)
+				{
+					int u=it[0];
+					int v=it[1]; 
+					int wt=it[2]; 
+					if(dist[u]!=1e8 && dist[u]+wt<dist[v])
+					{
+						dist[v]=dist[u]+wt; 
+					}
+				}
+			}
+			
+			
+			// nth relaxation to check negative cycle
+			for(auto it: edges)
+			{
+				int u=it[0];
+				int v=it[1];
+				int wt=it[2];
+				if(dist[u]!=1e8 && dist[u]+wt<dist[v])
+				{
+					return {-1};
+				}
+			}
+			
+			return dist; 
+		}
+}
+```
+- Time complexity: $O(V*E)$
+- More than Dijkstra's algorithm. 
+#### Floyd Warshall Algorithm
