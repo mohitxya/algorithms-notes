@@ -1825,7 +1825,67 @@ public:
 };
 ```
 #### Network Delay Time
+- `times[i]={u_i, v_i, w_i}`, where `w_i` is the time it takes for a signal to travel from source to target. 
+- Return the minimum time it takes for all the `n` nodes to receive the signal. 
+- If it is impossible for all the `n` nodes to receive the signal, return `-1`.
+- n: number of nodes, k: given node. 
+```cpp
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        
+        vector<vector<pair<int,int>>> adj(n+1);
+        
+        for(auto &t : times){
+            int u = t[0];
+            int v = t[1];
+            int w = t[2];
+            adj[u].push_back({v,w});
+        }
+
+		// distance initialization: 
+        vector<int> dist(n+1, 1e9);
+        dist[k] = 0;
+
+        priority_queue<
+            pair<int,int>,
+            vector<pair<int,int>>,
+            greater<pair<int,int>>
+        > pq;
+		// (distance,node)
+        pq.push({0,k});
+
+        while(!pq.empty()){
+            auto it=pq.pop(); 
+            int d=it.first; 
+            int node=it.second; 
+            
+            for(auto &[next,wt] : adj[node]){
+                if(d + wt < dist[next]){
+                //wt is the time taken to travel from src to tgt.
+                    dist[next] = d + wt;
+                    pq.push({dist[next], next});
+                }
+            }
+        }
+
+        int ans = 0;
+        for(int i=1;i<=n;i++){
+            if(dist[i] == 1e9) return -1;
+            ans = max(ans, dist[i]);
+        }
+
+        return ans;
+    }
+};
+```
+
 #### Number of Ways to Arrive at Destination
+- n intersections, with some bi-directional. 
+- At most one road between any two intersections. 
+- `roads[i]=[ui, vi, timei]`. 
+- number of distinct paths from 0 → n-1 whose total travel time = shortest possible travel time.
+- 
 #### Minimum Multiplications
 #### Bellman Ford Algorithm
 - Shortest path from a node to all the other nodes. 
@@ -1935,3 +1995,5 @@ class Solution
 		}
 }
 ```
+- Time complexity: $O(n^{3})$
+- Space complexity: $O(n^{2})$
