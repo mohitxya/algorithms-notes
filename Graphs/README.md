@@ -1882,3 +1882,10 @@ class Solution
 - Time complexity: $O(V*E)$
 - More than Dijkstra's algorithm. 
 #### Floyd Warshall Algorithm
+- Multi source shortest path algorithm. 
+- Helps you detect negative cycles.  
+- We use adjacency matrix.  
+- In undirected graph: `0->1` and `1->0` should be assigned the same value. 
+- `0->1`: `[0][0]+[0][1]`
+- Fill the matrix serially in this way. via 0, via 1, via 2 and so on. 
+- How to detect negative cycle? 
