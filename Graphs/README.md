@@ -1885,7 +1885,63 @@ public:
 - At most one road between any two intersections. 
 - `roads[i]=[ui, vi, timei]`. 
 - number of distinct paths from 0 → n-1 whose total travel time = shortest possible travel time.
-- 
+```cpp
+class Solution {
+
+public:
+
+    int countPaths(int n, vector<vector<int>>& roads) {
+
+        const long long MOD = 1e9+7;
+
+        vector<vector<pair<int,int>>> adj(n);
+
+        for(auto &rd : roads){
+            int u = rd[0];
+            int v = rd[1];
+            int w = rd[2];
+
+            adj[u].push_back({v,w});
+            adj[v].push_back({u,w});
+        }
+
+        vector<long long> dist(n, LLONG_MAX);
+        vector<long long> ways(n,0);
+        
+        priority_queue<
+            pair<long long,int>,
+            vector<pair<long long,int>>,
+            greater<pair<long long,int>>
+        > pq;
+
+        // we're just storing (distance, node)
+        dist[0] = 0;
+        ways[0] = 1;
+
+        pq.push({0,0});
+
+        while(!pq.empty()){
+            auto [d,u] = pq.top();
+            pq.pop();
+            if(d > dist[u]) continue;
+
+            // if that distance is more than the min possible skip.
+            for(auto &[v,w] : adj[u]){
+                if(d + w < dist[v]){
+                    dist[v] = d + w;
+                    ways[v] = ways[u];
+                    pq.push({dist[v], v});
+                }
+
+                else if(d + w == dist[v]){
+                    ways[v] = (ways[v] + ways[u]) % MOD;
+                }
+            }
+        }
+        return ways[n-1] % MOD;
+    }
+};
+```
 #### Minimum Multiplications
 #### Bellman Ford Algorithm
 - Shortest path from a node to all the other nodes. 
@@ -1997,3 +2053,131 @@ class Solution
 ```
 - Time complexity: $O(n^{3})$
 - Space complexity: $O(n^{2})$
+#### `[?]`City With the Smallest Number of Neighbors
+- Return the city with smallest number of cities that are reachable through some path and whose distance is at most `distanceThreshold`. 
+- If multiple such cities then return greatest number. 
+#### Minimum Spanning Tree - Theory
+- Undirected weighted graph with N nodes and M edges. 
+- Spanning tree: 
+	- A tree in which we have N nodes and N-1 edges. 
+	- All nodes are reachable by others. 
+- Draw all spanning trees, one with the minimum sum is MST.
+- Prim's Algorithm and Kruskal's Algorithm. 
+#### Prim's Algorithm
+- `(weight, node, parent)`
+- parent -1 means first node.
+- maintain a visited array, MST data-structure (node, node) and a sum variable. 
+- Maintain a min-heap type data structure and keep adding elements to it. 
+- Have least weight at the top. 
+- pop top element from the min-heap and find the unvisited nodes. 
+```cpp
+class Solution
+{
+	public: 
+	int spanningTree(int V, vector<vector<int>> adj[])
+	{
+		priority_queue<pair<int,int>,
+		vector<pair<int,int>>, greater<pair<inat,int>>> pq;
+		
+		vector<int> vis(V,0);
+		pq.push({0,0});
+		
+		// E log E + E log E = E log E
+		while(!pq.empty())
+		{
+			// log E
+			auto it=pq.top();
+			pq.pop();
+			int node = it.second;
+			int wt = it.first;
+			
+			if(vis[node]==1) continue; // if already visited skip the iteration. 
+			vis[node]=1;
+			sum+=wt;
+			// E log E
+			for(auto it: adj[node])
+			{
+				int adjNode = it[0];
+				int edW = it[1];
+				if(!vis[adjNode])
+				{
+					pq.push({edW, adjNode});
+				}
+			}
+		}
+		return sum; 
+	}
+};
+```
+- Why does greedy work for this? 
+- Time complexity: $O(E*log(E))$
+- Space complexity: $O(E)$
+#### Disjoint Set
+- Usually used in dynamic graphs. 
+- finding parent, union (Rank & Size). 
+- Rank array, Parent array. 
+- Two elements belong in the same component if their root parents are same. 
+- Update the path's array with the ultimate root parent. This is called path compression. 
+```cpp
+class DisjointSet{
+	vector<int> rank, parent; 
+public: 
+	DisjointSet( int n)
+	{
+		rank.resize(n+1, 0);
+		parent.resize(n+1);
+		for(int i=0; i<=n; i++)
+		{
+			parent[i]=i;
+		}
+	}
+	int findUPar(int node)
+	{
+		if(node == parent[node]) return node;
+		return parent[node]=findUPar(parent[node]);
+	}
+	
+	void unionByRank(int u, int v)
+	{
+		int ulp_u = findUPar(u);
+		int ulp_v = findUPar(v);
+		
+		if(ulp_u==ulp_v) return; 
+		if(rank[ulp_u] < rank[ulp_v])
+		{
+			parent[ulp_u] = ulp_v;
+		}
+		else if(rank[ulp_v] < rank[ulp_u])
+		{
+			parent[ulp_v] = ulp_u;
+		}
+		else
+		{
+			parent[ulp_v] = ulp_u;
+			rank[ulp_u]++;
+		}
+	}
+}
+```
+- Why connect smaller to larger? Doesn't increase height. 
+- Could use "Union by size" instead of "Union by rank". 
+```cpp
+void unionByRank(int u, int v)
+	{
+		int ulp_u = findUPar(u);
+		int ulp_v = findUPar(v);
+		
+		if(ulp_u==ulp_v) return; 
+		if(size[ulp_u] < size[ulp_v])
+		{
+			parent[ulp_u] = ulp_v;
+			size[ulp_v] += size[ulp_u];
+		}
+		else
+		{
+			parent[ulp_v] = ulp_u;
+			size[ulp_u] += size[ulp_v];
+		}
+	}
+```
+#### Kruskal's Algorithm
