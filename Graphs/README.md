@@ -2230,3 +2230,7 @@ class Solution
 - Use disjoint set to find number of components. 
 - Then the final answer is just: `N-1`, where `N` is the number of sets. 
 - We need those many connections. 
+#### Most stones removed
+- If x or y coordinate same then the nodes are considered connected and we do a disjoint union on them. 
+- Then for each component we'll leave only one node. 
+- This results in the answer being: `N-components`.
