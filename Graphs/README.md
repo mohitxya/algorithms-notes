@@ -2162,7 +2162,7 @@ public:
 - Why connect smaller to larger? Doesn't increase height. 
 - Could use "Union by size" instead of "Union by rank". 
 ```cpp
-void unionByRank(int u, int v)
+void unionBySize(int u, int v)
 	{
 		int ulp_u = findUPar(u);
 		int ulp_v = findUPar(v);
@@ -2181,3 +2181,52 @@ void unionByRank(int u, int v)
 	}
 ```
 #### Kruskal's Algorithm
+- Help's us in finding the MST. 
+- `(weight, u, v)`
+- Algorithm: 
+	- Sort all the edges according to weight. 
+	- If u and v don't belong to the same component, add them. 
+```cpp
+class Solution 
+{
+	public: 
+	int spanningTree(int V, vector<vector<int>> adj[])
+	{
+		vector<pair<int, pair<int,int>>> edges;
+		for(int i=0; i<V; i++)
+		{
+			for(auto it: adj[i])
+			{
+				int adjNode = it[0];
+				int wt = it[1];
+				int node = ij;
+				
+				edges.push_back({wt, {node, adjNode}});
+			}
+			DisjointSet ds(V);
+			sort(edges.begin(), edges.end());
+			int mstWt = 0; 
+			for(auto it: edges)
+			{
+				int wt = it.first; 
+				int u = it.second.first;
+				int v = it.second.second; 
+				
+				if(ds.findUPar(u) != ds.findUPar(v))
+				{
+					mstWt += wt;
+					ds.unionBySize(u,v);
+				}
+			}
+			
+			return mstWt; 
+		}
+	}
+}
+```
+- Time complexity: $O(E*log(E))$
+- Space complexity: $O(V+E)$
+#### Make network connected
+- Use disjoint set to find number of components. 
+- Then the final answer is just: `N-1`, where `N` is the number of sets. 
+- We need those many connections. 
